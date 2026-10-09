@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Category } from "@/types";
 
 interface CategoryCardProps {
@@ -13,6 +14,7 @@ function CategoryCard({ category }: CategoryCardProps) {
     >
       {/* Image placeholder */}
       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-cream to-warm-gray">
+        <Image src={category.image} alt="" fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover opacity-40 mix-blend-multiply" />
         <div className="text-center">
           <div className="w-12 h-12 mx-auto mb-2 border border-gold/20 rounded-full flex items-center justify-center group-hover:border-gold/50 transition-colors">
             <svg

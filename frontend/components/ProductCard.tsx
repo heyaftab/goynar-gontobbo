@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import type { Product } from "@/types";
+import { useStore } from "@/components/StoreProvider";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { wishlist, toggleWishlist, addToCart } = useStore();
+  const isWishlisted = wishlist.includes(product.id);
 
   const discount = product.originalPrice
     ? Math.round(
@@ -22,6 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="relative aspect-[3/4] bg-cream border border-border overflow-hidden mb-3">
         {/* Image placeholder */}
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-cream to-warm-gray">
+          <Image src={product.images[0]} alt={product.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover opacity-55 mix-blend-multiply" />
           <div className="text-center">
             <div className="w-14 h-14 mx-auto mb-2 border border-gold/20 rounded-full flex items-center justify-center">
               <svg
@@ -62,7 +66,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Wishlist button */}
         <button
           type="button"
-          onClick={() => setIsWishlisted(!isWishlisted)}
+          onClick={() => toggleWishlist(product.id)}
           className={`absolute top-2 sm:top-3 right-2 sm:right-3 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-surface/90 backdrop-blur-sm border border-border hover:border-gold/50 transition-all duration-200 ${
             isWishlisted ? "border-gold bg-gold/10" : ""
           }`}
@@ -99,13 +103,12 @@ export function ProductCard({ product }: ProductCardProps) {
 
         {/* Hover quick view */}
         <div className="absolute bottom-0 inset-x-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-          <button
-            type="button"
-            className="w-full py-2.5 bg-surface/95 backdrop-blur-sm text-charcoal text-xs font-medium tracking-wider hover:bg-gold hover:text-white transition-colors border border-border"
-            disabled={!product.inStock}
+          <Link
+            href={`/products/${product.slug}`}
+            className="block w-full py-2.5 bg-surface/95 backdrop-blur-sm text-center text-charcoal text-xs font-medium tracking-wider hover:bg-gold hover:text-white transition-colors border border-border"
           >
             Quick View
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -115,9 +118,9 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.category}
         </p>
         <h3 className="font-heading text-sm sm:text-base font-semibold text-dark leading-tight line-clamp-2 group-hover:text-gold transition-colors">
-          <a href={`/products/${product.slug}`}>
+          <Link href={`/products/${product.slug}`}>
             {product.name}
-          </a>
+          </Link>
         </h3>
         <div className="flex items-center gap-2">
           <span className="text-sm sm:text-base font-medium text-dark">
@@ -130,6 +133,14 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
         </div>
+        <button
+          type="button"
+          onClick={() => addToCart(product)}
+          disabled={!product.inStock}
+          className="mt-2 w-full border border-border px-3 py-2 text-xs font-medium text-charcoal hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {product.inStock ? "Add to Cart" : "Out of Stock"}
+        </button>
         {product.rating && (
           <div className="flex items-center gap-1.5">
             <div className="flex items-center gap-0.5">

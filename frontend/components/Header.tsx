@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { NavItem } from "@/types";
+import { useStore } from "@/components/StoreProvider";
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
@@ -128,6 +130,9 @@ function CloseIcon() {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const router = useRouter();
+  const { cart } = useStore();
+  const cartCount = cart.reduce((count, line) => count + line.quantity, 0);
 
   return (
     <header className="sticky top-0 z-50 bg-surface/95 backdrop-blur-sm border-b border-border">
@@ -181,6 +186,7 @@ export function Header() {
               type="button"
               className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Search"
+              onClick={() => router.push("/search")}
             >
               <SearchIcon />
             </button>
@@ -188,6 +194,7 @@ export function Header() {
               type="button"
               className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Account"
+              onClick={() => router.push("/account")}
             >
               <UserIcon />
             </button>
@@ -195,17 +202,19 @@ export function Header() {
               type="button"
               className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Wishlist"
+              onClick={() => router.push("/wishlist")}
             >
               <HeartIcon />
             </button>
             <button
               type="button"
               className="p-2 text-charcoal hover:text-gold transition-colors relative"
-              aria-label="Cart"
+              aria-label={`Cart, ${cartCount} items`}
+              onClick={() => router.push("/cart")}
             >
               <CartIcon />
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-gold text-white text-[10px] font-medium rounded-full flex items-center justify-center">
-                0
+                {cartCount}
               </span>
             </button>
           </div>
@@ -237,6 +246,7 @@ export function Header() {
               type="button"
               className="p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Search"
+              onClick={() => router.push("/search")}
             >
               <SearchIcon />
             </button>
@@ -244,6 +254,7 @@ export function Header() {
               type="button"
               className="p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Account"
+              onClick={() => router.push("/account")}
             >
               <UserIcon />
             </button>
@@ -251,6 +262,7 @@ export function Header() {
               type="button"
               className="p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Wishlist"
+              onClick={() => router.push("/wishlist")}
             >
               <HeartIcon />
             </button>

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function AboutSection() {
   return (
     <section className="py-16 sm:py-20 lg:py-24 bg-cream">
@@ -61,7 +63,7 @@ export function AboutSection() {
               </p>
             </div>
             <div className="mt-8">
-              <a
+              <Link
                 href="/about"
                 className="inline-flex items-center text-sm font-medium text-gold hover:text-gold-dark transition-colors group"
               >
@@ -80,7 +82,7 @@ export function AboutSection() {
                     d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
                   />
                 </svg>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

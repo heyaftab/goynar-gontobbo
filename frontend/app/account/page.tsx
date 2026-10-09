@@ -1,0 +1,1 @@
+export default function AccountPage() { return <section className="max-w-2xl mx-auto px-4 py-20 text-center"><h1 className="font-heading text-4xl mb-4">Your Account</h1><p className="text-muted">Customer accounts are not available yet. Your cart and wishlist are saved in this browser.</p></section>; }

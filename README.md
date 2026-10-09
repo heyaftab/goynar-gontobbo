@@ -63,7 +63,7 @@ php artisan key:generate
 Configure the database as described below, then run the migrations:
 
 ```bash
-php artisan migrate
+php artisan migrate --seed
 ```
 
 Start the Laravel application:
@@ -108,7 +108,7 @@ Copy `backend/.env.example` to `backend/.env`; never commit the resulting `.env`
 | `DB_USERNAME`, `DB_PASSWORD` | Database credentials | Your local database credentials |
 | `SESSION_DRIVER`, `CACHE_STORE`, `QUEUE_CONNECTION` | Laravel service drivers | `database`, `database`, `database` |
 
-The current frontend does not require environment variables because it reads local mock data. When the Laravel API is connected, add a public variable such as `NEXT_PUBLIC_API_URL=http://127.0.0.1:8000` in `frontend/.env.local` and use it only for values safe to expose in the browser.
+Set `LARAVEL_API_URL=http://127.0.0.1:8000` in `frontend/.env.local` to have the server rendered catalog read from Laravel. If it is unset or the API is unreachable, the storefront falls back to its local mock catalog. This variable stays on the server and is not exposed to visitors' browsers.
 
 ## Database setup
 
@@ -119,7 +119,7 @@ Laravel defaults to SQLite. Create the local database file, then migrate:
 ```bash
 cd backend
 touch database/database.sqlite
-php artisan migrate
+php artisan migrate --seed
 ```
 
 Keep `DB_CONNECTION=sqlite` in `backend/.env`. Laravel will use `database/database.sqlite` unless `DB_DATABASE` specifies another path.
@@ -137,7 +137,7 @@ DB_USERNAME=your_database_user
 DB_PASSWORD=your_database_password
 ```
 
-Run `php artisan migrate` after saving the configuration. The migrations create the catalog tables and their relationships, including categories, materials, purities, products, product images, and product variants.
+Run `php artisan migrate --seed` after saving the configuration to create the catalog tables and load sample catalog data.
 
 ## Run the project locally
 
@@ -164,9 +164,15 @@ php artisan test
 
 ## API information
 
-No application API endpoints have been implemented yet. The only registered web route is Laravel's default welcome-page route (`GET /`). The storefront currently consumes `frontend/data/mock-categories.ts` and `frontend/data/mock-products.ts`.
+The Laravel backend exposes a public, read-only catalog API under `/api/v1`:
 
-When implementing the integration, define versioned API routes (for example, under `/api/v1`) for product listing and detail, categories, inventory, customer accounts, carts, and checkout. Update the frontend to consume those endpoints and document request/response contracts here.
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/v1/categories` | List active categories with active product counts |
+| `GET /api/v1/products` | Paginated active products; accepts `q`, `category`, and `per_page` filters |
+| `GET /api/v1/products/{slug}` | Fetch one active product by slug |
+
+Product responses include category, material, purity, images, and active variants. The frontend still uses `frontend/data/mock-categories.ts` and `frontend/data/mock-products.ts`; customer accounts, carts, checkout, and administration are not connected to the backend yet.
 
 ## Deployment
 
@@ -187,4 +193,3 @@ The frontend and backend can be deployed independently:
 - Add payment gateway, delivery tracking, order management, and customer notifications
 - Add database seeders, test coverage for catalog workflows, API documentation, and CI/CD
 - Optimize product images, accessibility, SEO, observability, and production security controls
-

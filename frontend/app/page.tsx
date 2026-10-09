@@ -3,10 +3,16 @@ import { CategorySection } from "@/components/CategorySection";
 import { ProductSection } from "@/components/ProductSection";
 import { AboutSection } from "@/components/AboutSection";
 import { TrustSection } from "@/components/TrustSection";
-import { categories } from "@/data/mock-categories";
-import { newArrivals, bestSellers } from "@/data/mock-products";
+import { getCategories, getProducts } from "@/data/catalog-api";
 
-export default function Home() {
+export const revalidate = 60;
+
+export default async function Home() {
+  const [categories, newArrivals, bestSellers] = await Promise.all([
+    getCategories(),
+    getProducts({ newArrivals: true }),
+    getProducts({ bestSellers: true }),
+  ]);
   return (
     <>
       <Hero />

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Product } from "@/types";
 import { useStore } from "@/components/StoreProvider";
+import { motionIndex } from "@/lib/motion";
 
 interface ProductCardProps {
   product: Product;
@@ -20,34 +21,10 @@ export function ProductCard({ product }: ProductCardProps) {
     : null;
 
   return (
-    <article className="group relative">
+    <article className="group relative" data-motion={motionIndex(product.slug)}>
       {/* Image container */}
       <div className="relative aspect-[3/4] bg-cream border border-border overflow-hidden mb-3">
-        {/* Image placeholder */}
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-cream to-warm-gray">
-          <Image src={product.images[0]} alt={product.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover opacity-55 mix-blend-multiply" />
-          <div className="text-center">
-            <div className="w-14 h-14 mx-auto mb-2 border border-gold/20 rounded-full flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1}
-                stroke="currentColor"
-                className="w-7 h-7 text-gold/30"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M2.25 15.75l5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z"
-                />
-              </svg>
-            </div>
-            <span className="text-[10px] uppercase tracking-wider text-muted">
-              Product Image
-            </span>
-          </div>
-        </div>
+        <Image src={product.images[0] || "/jewellery-placeholder.svg"} alt={product.name} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
 
         {/* Badges */}
         <div className="absolute top-2 sm:top-3 left-2 sm:left-3 flex flex-col gap-1.5">
@@ -66,6 +43,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* Wishlist button */}
         <button
           type="button"
+          data-motion={motionIndex(`${product.slug}-wish`)}
           onClick={() => toggleWishlist(product.id)}
           className={`absolute top-2 sm:top-3 right-2 sm:right-3 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center bg-surface/90 backdrop-blur-sm border border-border hover:border-gold/50 transition-all duration-200 ${
             isWishlisted ? "border-gold bg-gold/10" : ""
@@ -105,6 +83,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="absolute bottom-0 inset-x-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
           <Link
             href={`/products/${product.slug}`}
+            data-motion={motionIndex(`${product.slug}-quick`)}
             className="block w-full py-2.5 bg-surface/95 backdrop-blur-sm text-center text-charcoal text-xs font-medium tracking-wider hover:bg-gold hover:text-white transition-colors border border-border"
           >
             Quick View
@@ -135,6 +114,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
         <button
           type="button"
+          data-motion={motionIndex(`${product.slug}-cart`)}
           onClick={() => addToCart(product)}
           disabled={!product.inStock}
           className="mt-2 w-full border border-border px-3 py-2 text-xs font-medium text-charcoal hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-50"

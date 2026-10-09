@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: goynar-gontobbo-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: singapore
+    healthCheckPath: /up
+    dockerCommand: sh -c "php artisan migrate --force && php artisan db:seed --force && apache2-foreground"
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_URL
+        fromDatabase:
+          name: goynar-gontobbo-db
+          property: connectionString
+      - key: CACHE_STORE
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: SESSION_ENCRYPT
+        value: "true"
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: LOG_CHANNEL
+        value: stderr
+
+databases:
+  - name: goynar-gontobbo-db
+    databaseName: goynar_gontobbo
+    user: goynar_gontobbo
+    plan: free
+    region: singapore

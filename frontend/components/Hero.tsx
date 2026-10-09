@@ -30,12 +30,14 @@ export function Hero() {
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
               <Link
                 href="/shop"
+                data-motion="117"
                 className="inline-flex items-center justify-center px-8 py-3.5 bg-gold text-white text-sm font-medium tracking-wide hover:bg-gold-dark transition-all duration-300 hover:shadow-lg hover:shadow-gold/20"
               >
                 Shop Now
               </Link>
               <Link
                 href="/categories"
+                data-motion="286"
                 className="inline-flex items-center justify-center px-8 py-3.5 border border-charcoal/20 text-charcoal text-sm font-medium tracking-wide hover:border-gold hover:text-gold transition-all duration-300"
               >
                 Explore Categories

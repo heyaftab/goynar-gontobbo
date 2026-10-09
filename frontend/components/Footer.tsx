@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 const footerLinks = {
@@ -21,7 +22,7 @@ const footerLinks = {
   ],
   company: [
     { label: "About Us", href: "/about" },
-    { label: "Our Story", href: "/about#story" },
+    { label: "Our Story", href: "/story" },
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
   ],
@@ -78,18 +79,17 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="inline-block">
-              <span className="font-heading text-xl font-bold text-cream">
-                Goynar Gontobbo
-              </span>
-              <span className="block text-[9px] tracking-[0.3em] uppercase text-cream/50 mt-[-1px]">
-                Fine Jewellery
-              </span>
+            <Link href="/" className="inline-block" aria-label="Goynar Gontobbo home">
+              <Image src="/brand-logo.jpg" alt="Goynar Gontobbo" width={1000} height={634} className="h-auto w-40 rounded-sm sm:w-48" />
             </Link>
             <p className="mt-4 text-sm text-cream/50 leading-relaxed">
               Celebrating the art of Bangladeshi jewellery with handcrafted
               pieces that honour tradition and embrace modern elegance.
             </p>
+            <a href="https://www.facebook.com/GoynarGontobbo" target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center gap-2 text-sm text-cream/60 transition-colors hover:text-gold" aria-label="Visit Goynar Gontobbo on Facebook">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4"><path d="M13.4 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5h1.7V3.6c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.1H7.2V13H10v8h3.4Z" /></svg>
+              <span>Follow us on Facebook</span>
+            </a>
           </div>
 
           {/* Shop */}

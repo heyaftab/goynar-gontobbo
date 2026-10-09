@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { StoreProvider } from "@/components/StoreProvider";
+import { ChatAssistant } from "@/components/ChatAssistant";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -44,12 +45,17 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem('gg-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}" }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <StoreProvider>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          <ChatAssistant />
         </StoreProvider>
       </body>
     </html>

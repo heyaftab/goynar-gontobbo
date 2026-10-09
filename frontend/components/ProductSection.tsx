@@ -24,6 +24,7 @@ export function ProductSection({
         <div className="text-center mt-10 sm:mt-12">
           <Link
             href={viewAllHref}
+            data-motion={viewAllHref.length * 11 + 4}
             className="inline-flex items-center justify-center px-8 py-3 border border-charcoal/20 text-charcoal text-sm font-medium tracking-wide hover:border-gold hover:text-gold transition-all duration-300"
           >
             View All

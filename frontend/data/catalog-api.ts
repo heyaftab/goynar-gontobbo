@@ -21,6 +21,8 @@ const apiBase = process.env.LARAVEL_API_URL?.replace(/\/$/, "");
 const placeholder = "/jewellery-placeholder.svg";
 
 function toProduct(item: ApiProduct): Product {
+  const localProduct = mockProducts.find((product) => product.slug === item.slug);
+  const apiImages = item.images?.map(({ image_url }) => image_url).filter((image) => Boolean(image) && image !== placeholder) ?? [];
   return {
     id: String(item.id),
     name: item.name,
@@ -28,7 +30,7 @@ function toProduct(item: ApiProduct): Product {
     price: Number(item.price),
     originalPrice: item.compare_at_price == null ? undefined : Number(item.compare_at_price),
     currency: "৳",
-    images: item.images?.length ? item.images.map(({ image_url }) => image_url) : [placeholder],
+    images: apiImages.length ? apiImages : localProduct?.images ?? [placeholder],
     category: item.category?.name ?? "Jewellery",
     categorySlug: item.category?.slug ?? "",
     isNewArrival: item.is_new_arrival ?? false,
@@ -88,7 +90,7 @@ export async function getCategories(): Promise<Category[]> {
       id: String(item.id),
       name: item.name,
       slug: item.slug,
-      image: item.image || placeholder,
+      image: item.image && item.image !== placeholder ? item.image : mockCategories.find((category) => category.slug === item.slug)?.image || placeholder,
       productCount: item.products_count ?? 0,
     }));
   } catch {

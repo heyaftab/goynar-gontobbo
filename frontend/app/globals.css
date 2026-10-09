@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./motion-library.css";
 
 @theme inline {
   --color-ivory: #faf8f5;
@@ -25,9 +26,79 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ivory: #171613;
+  --color-cream: #24221e;
+  --color-warm-gray: #37332b;
+  --color-charcoal: #e9e2d8;
+  --color-dark: #faf6ef;
+  --color-muted: #b8b0a4;
+  --color-border: #403b32;
+  --color-surface: #211f1b;
+}
+
+html[data-theme="dark"] [class~="bg-white"],
+html[data-theme="dark"] [class~="bg-white/70"],
+html[data-theme="dark"] [class~="bg-white/90"],
+html[data-theme="dark"] [class~="bg-white/95"] {
+  background-color: var(--color-surface);
+}
+
+/* Charcoal surfaces become light in dark mode, so their fixed white labels
+   need a dark foreground to preserve contrast. */
+html[data-theme="dark"] [class~="bg-charcoal"][class~="text-white"] {
+  color: var(--color-ivory);
+}
+
 ::selection {
   background: var(--color-gold-light);
   color: var(--color-dark);
+}
+
+@keyframes search-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes search-glow {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, 0) scale(0.94); }
+  50% { opacity: 1; transform: translate(-50%, 18px) scale(1.08); }
+}
+
+@keyframes chat-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes chat-message {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-search-rise {
+  animation: search-rise 520ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.animate-search-glow {
+  animation: search-glow 8s ease-in-out infinite;
+}
+
+.animate-chat-in {
+  animation: chat-in 240ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.animate-chat-message {
+  animation: chat-message 220ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-search-rise,
+  .animate-search-glow,
+  .animate-chat-in,
+  .animate-chat-message {
+    animation: none !important;
+  }
 }
 
 /* Smooth scrolling */

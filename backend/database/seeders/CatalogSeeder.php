@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Material;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -12,9 +13,22 @@ class CatalogSeeder extends Seeder
 {
     public function run(): void
     {
+        $categoryImages = [
+            'earrings' => '/assets/products/earring-pearl-drop.jpg',
+            'rings' => '/assets/products/hand-harness-ruby.jpg',
+            'bangles' => '/assets/products/hand-harness-gold.jpg',
+            'necklaces' => '/assets/products/hand-harness-pearl.jpg',
+            'jhumka' => '/assets/products/earring-jhumka-closeup.jpg',
+            'cuffs' => '/assets/products/earring-cuff.jpg',
+            'tana' => '/assets/products/earring-long-pearl.jpg',
+            'sets' => '/assets/products/hand-harness-ruby.jpg',
+        ];
+
         foreach (['Earrings', 'Rings', 'Bangles', 'Necklaces', 'Jhumka', 'Cuffs', 'Tana', 'Sets'] as $position => $name) {
+            $slug = Str::slug($name);
             Category::updateOrCreate(['slug' => Str::slug($name)], [
                 'name' => $name,
+                'image' => $categoryImages[$slug] ?? null,
                 'is_active' => true,
                 'sort_order' => $position,
             ]);
@@ -41,9 +55,24 @@ class CatalogSeeder extends Seeder
             ['Statement Cocktail Ring', 'rings', 'kundan', 2400, null, false, true, false],
         ];
 
+        $productImages = [
+            'gold-plated-floral-jhumka' => ['/assets/products/earring-jhumka-closeup.jpg', '/assets/products/earring-green-drop.jpg', '/assets/products/earring-white-stone.jpg', '/assets/products/earring-floral-stud.jpg'],
+            'pearl-drop-earrings' => ['/assets/products/earring-pearl-drop.jpg', '/assets/products/earring-long-pearl.jpg', '/assets/products/earring-floral-drop.jpg', '/assets/products/earring-pearl-cuff.jpg'],
+            'traditional-filigree-bangle-set' => ['/assets/products/hand-harness-gold.jpg'],
+            'kundan-stone-necklace' => ['/assets/products/hand-harness-ruby.jpg'],
+            'rose-gold-adjustable-ring' => ['/assets/products/hand-harness-ruby.jpg'],
+            'silver-plated-cuff-bracelet' => ['/assets/products/hand-harness-gold.jpg'],
+            'classic-tana-pendant-set' => ['/assets/products/hand-harness-pearl.jpg'],
+            'bridal-gold-tone-jewellery-set' => ['/assets/products/hand-harness-ruby.jpg', '/assets/products/hand-harness-pearl.jpg'],
+            'antique-chandbali-earrings' => ['/assets/products/earring-chandbali.jpg', '/assets/products/earring-gem-drop.jpg', '/assets/products/earring-purple-drop.jpg', '/assets/products/earring-gold-dangle.jpg', '/assets/products/earring-gold-stud.jpg'],
+            'twisted-gold-bangle' => ['/assets/products/hand-harness-gold.jpg'],
+            'layered-chain-necklace' => ['/assets/products/hand-harness-pearl.jpg'],
+            'statement-cocktail-ring' => ['/assets/products/hand-harness-ruby.jpg'],
+        ];
+
         foreach ($products as [$name, $categorySlug, $materialSlug, $price, $compareAt, $inStock, $newArrival, $bestSeller]) {
             $slug = Str::slug($name);
-            Product::updateOrCreate(['slug' => $slug], [
+            $product = Product::updateOrCreate(['slug' => $slug], [
                 'name' => $name,
                 'sku' => Str::upper(Str::slug($name, '-')),
                 'description' => "A thoughtfully designed {$name} from our jewellery collection.",
@@ -58,6 +87,17 @@ class CatalogSeeder extends Seeder
                 'is_new_arrival' => $newArrival,
                 'is_best_seller' => $bestSeller,
             ]);
+
+            foreach ($productImages[$slug] ?? [] as $sortOrder => $imageUrl) {
+                ProductImage::updateOrCreate(
+                    ['product_id' => $product->id, 'image_url' => $imageUrl],
+                    [
+                        'alt_text' => $name,
+                        'sort_order' => $sortOrder,
+                        'is_primary' => $sortOrder === 0,
+                    ],
+                );
+            }
         }
     }
 }

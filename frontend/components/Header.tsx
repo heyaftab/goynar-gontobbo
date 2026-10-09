@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { NavItem } from "@/types";
 import { useStore } from "@/components/StoreProvider";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
@@ -155,13 +157,8 @@ export function Header() {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex flex-col items-center">
-            <span className="font-heading text-xl sm:text-2xl lg:text-3xl font-bold text-dark tracking-tight">
-              Goynar Gontobbo
-            </span>
-            <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-muted mt-[-2px]">
-              Fine Jewellery
-            </span>
+          <Link href="/" className="flex items-center transition-transform duration-300 hover:scale-[1.025]" aria-label="Goynar Gontobbo home">
+            <Image src="/brand-logo.jpg" alt="Goynar Gontobbo" width={1000} height={613} priority className="h-[3.8rem] w-[6.2rem] object-contain drop-shadow-sm sm:h-16 sm:w-[6.5rem] lg:h-[4.55rem] lg:w-[7.5rem]" />
           </Link>
 
           {/* Desktop nav */}
@@ -173,6 +170,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
+                data-motion={navItems.indexOf(item) * 13 + 31}
                 className="text-sm font-medium text-charcoal hover:text-gold transition-colors duration-200 relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[1px] after:bg-gold after:transition-all after:duration-300 hover:after:w-full"
               >
                 {item.label}
@@ -184,6 +182,7 @@ export function Header() {
           <div className="flex items-center gap-3 sm:gap-4">
             <button
               type="button"
+              data-motion="203"
               className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Search"
               onClick={() => router.push("/search")}
@@ -192,6 +191,7 @@ export function Header() {
             </button>
             <button
               type="button"
+              data-motion="147"
               className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Account"
               onClick={() => router.push("/account")}
@@ -200,6 +200,7 @@ export function Header() {
             </button>
             <button
               type="button"
+              data-motion="255"
               className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Wishlist"
               onClick={() => router.push("/wishlist")}
@@ -208,6 +209,7 @@ export function Header() {
             </button>
             <button
               type="button"
+              data-motion="89"
               className="p-2 text-charcoal hover:text-gold transition-colors relative"
               aria-label={`Cart, ${cartCount} items`}
               onClick={() => router.push("/cart")}
@@ -217,6 +219,7 @@ export function Header() {
                 {cartCount}
               </span>
             </button>
+            <ThemeToggle compact />
           </div>
         </div>
       </div>
@@ -242,6 +245,7 @@ export function Header() {
             </Link>
           ))}
           <div className="flex items-center gap-4 pt-3 mt-2 border-t border-border">
+            <ThemeToggle />
             <button
               type="button"
               className="p-2 text-charcoal hover:text-gold transition-colors"
@@ -258,6 +262,13 @@ export function Header() {
             >
               <UserIcon />
             </button>
+            <Link
+              href="/register"
+              className="text-sm font-medium text-charcoal hover:text-gold"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Create account
+            </Link>
             <button
               type="button"
               className="p-2 text-charcoal hover:text-gold transition-colors"

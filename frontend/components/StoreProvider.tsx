@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import type { CartLine, Product } from "@/types";
+import { mockProducts } from "@/data/mock-products";
 
 interface StoreSnapshot {
   cart: CartLine[];
@@ -10,6 +11,7 @@ interface StoreSnapshot {
 
 interface StoreValue extends StoreSnapshot {
   addToCart: (product: Product) => void;
+  setCartQuantity: (productId: string, quantity: number) => void;
   removeFromCart: (productId: string) => void;
   toggleWishlist: (productId: string) => void;
 }
@@ -21,8 +23,15 @@ const listeners = new Set<() => void>();
 function getSnapshot(): StoreSnapshot {
   if (snapshot) return snapshot;
   try {
+    const savedCart = JSON.parse(localStorage.getItem("gg-cart") ?? "[]") as CartLine[];
     snapshot = {
-      cart: JSON.parse(localStorage.getItem("gg-cart") ?? "[]") as CartLine[],
+      cart: savedCart.map((line) => {
+        const hasProductImage = Array.isArray(line.product.images)
+          && line.product.images.some((image) => image && image !== "/jewellery-placeholder.svg");
+        if (hasProductImage) return line;
+        const currentProduct = mockProducts.find((product) => product.slug === line.product.slug);
+        return currentProduct ? { ...line, product: { ...line.product, images: currentProduct.images } } : line;
+      }),
       wishlist: JSON.parse(localStorage.getItem("gg-wishlist") ?? "[]") as string[],
     };
   } catch {
@@ -61,6 +70,20 @@ function removeFromCart(productId: string) {
   update({ ...current, cart: current.cart.filter((line) => line.product.id !== productId) });
 }
 
+function setCartQuantity(productId: string, quantity: number) {
+  const current = getSnapshot();
+  if (quantity <= 0) {
+    removeFromCart(productId);
+    return;
+  }
+  update({
+    ...current,
+    cart: current.cart.map((line) =>
+      line.product.id === productId ? { ...line, quantity } : line,
+    ),
+  });
+}
+
 function toggleWishlist(productId: string) {
   const current = getSnapshot();
   update({
@@ -77,5 +100,5 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
 export function useStore(): StoreValue {
   const current = useSyncExternalStore(subscribe, getSnapshot, () => serverSnapshot);
-  return { ...current, addToCart, removeFromCart, toggleWishlist };
+  return { ...current, addToCart, setCartQuantity, removeFromCart, toggleWishlist };
 }

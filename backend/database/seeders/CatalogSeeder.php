@@ -53,6 +53,13 @@ class CatalogSeeder extends Seeder
             ['Twisted Gold Bangle', 'bangles', 'gold-plated', 2100, 2600, true, false, false],
             ['Layered Chain Necklace', 'necklaces', 'gold-plated', 4800, null, true, false, true],
             ['Statement Cocktail Ring', 'rings', 'kundan', 2400, null, false, true, false],
+            ['Emerald Stone Drop Earrings', 'earrings', 'gold-plated', 2650, null, true, true, false],
+            ['Floral Gold Stud Earrings', 'earrings', 'gold-plated', 1450, null, true, false, false],
+            ['White Stone Drop Earrings', 'earrings', 'silver-plated', 2250, null, true, false, false],
+            ['Pearl Accent Necklace', 'necklaces', 'pearl', 3900, null, true, false, false],
+            ['Ruby Kundan Necklace', 'necklaces', 'kundan', 7200, null, true, false, false],
+            ['Classic Gold Bangle', 'bangles', 'gold-plated', 2450, null, true, false, false],
+            ['Pearl Detail Cuff Bracelet', 'cuffs', 'pearl', 2850, null, true, false, false],
         ];
 
         $productImages = [
@@ -68,6 +75,13 @@ class CatalogSeeder extends Seeder
             'twisted-gold-bangle' => ['/assets/products/hand-harness-gold.jpg'],
             'layered-chain-necklace' => ['/assets/products/hand-harness-pearl.jpg'],
             'statement-cocktail-ring' => ['/assets/products/hand-harness-ruby.jpg'],
+            'emerald-stone-drop-earrings' => ['/assets/products/earring-green-drop.jpg'],
+            'floral-gold-stud-earrings' => ['/assets/products/earring-floral-stud.jpg'],
+            'white-stone-drop-earrings' => ['/assets/products/earring-white-stone.jpg'],
+            'pearl-accent-necklace' => ['/assets/products/hand-harness-pearl.jpg'],
+            'ruby-kundan-necklace' => ['/assets/products/hand-harness-ruby.jpg'],
+            'classic-gold-bangle' => ['/assets/products/hand-harness-gold.jpg'],
+            'pearl-detail-cuff-bracelet' => ['/assets/products/earring-pearl-cuff.jpg'],
         ];
 
         foreach ($products as [$name, $categorySlug, $materialSlug, $price, $compareAt, $inStock, $newArrival, $bestSeller]) {

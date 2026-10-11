@@ -157,8 +157,8 @@ export function Header() {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center transition-transform duration-300 hover:scale-[1.025]" aria-label="Goynar Gontobbo home">
-            <Image src="/brand-logo.jpg" alt="Goynar Gontobbo" width={1000} height={613} priority className="h-[3.8rem] w-[6.2rem] object-contain drop-shadow-sm sm:h-16 sm:w-[6.5rem] lg:h-[4.55rem] lg:w-[7.5rem]" />
+          <Link href="/" className="flex shrink-0 items-center transition-transform duration-300 hover:scale-[1.025]" aria-label="Goynar Gontobbo home">
+            <Image src="/brand-logo.jpg" alt="Goynar Gontobbo" width={1000} height={613} priority className="h-[4.3rem] w-[7.2rem] object-contain sm:h-[4.8rem] sm:w-[8rem] lg:h-[5.5rem] lg:w-[9rem]" />
           </Link>
 
           {/* Desktop nav */}

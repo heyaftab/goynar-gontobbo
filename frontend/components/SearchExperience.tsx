@@ -101,7 +101,7 @@ export function SearchExperience({ products, initialQuery = "" }: { products: Pr
   const popularTerms = ["jhumka", "pearl", "bangles", "kundan", "earrings"];
 
   return (
-    <section className="relative isolate overflow-hidden bg-gradient-to-b from-cream via-ivory to-ivory">
+    <section className="search-shell relative isolate overflow-hidden bg-gradient-to-b from-cream via-ivory to-ivory">
       <div aria-hidden="true" className="pointer-events-none absolute -top-48 left-1/2 -z-10 h-96 w-[42rem] -translate-x-1/2 rounded-full bg-gold/10 blur-3xl animate-search-glow motion-reduce:animate-none" />
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <header className="mx-auto max-w-3xl text-center">

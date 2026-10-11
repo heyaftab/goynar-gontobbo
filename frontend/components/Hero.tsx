@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Hero() {
   return (
-    <section className="relative bg-gradient-to-br from-cream via-ivory to-warm-gray overflow-hidden">
+    <section className="hero-shell relative bg-gradient-to-br from-cream via-ivory to-warm-gray overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-gold blur-3xl" />
@@ -31,14 +31,14 @@ export function Hero() {
               <Link
                 href="/shop"
                 data-motion="117"
-                className="inline-flex items-center justify-center px-8 py-3.5 bg-gold text-white text-sm font-medium tracking-wide hover:bg-gold-dark transition-all duration-300 hover:shadow-lg hover:shadow-gold/20"
+                className="inline-flex items-center justify-center rounded-full px-8 py-3.5 bg-gold text-white text-sm font-medium tracking-wide shadow-[0_5px_16px_rgba(139,101,8,0.18)] hover:-translate-y-0.5 hover:bg-gold-dark transition-all duration-300 hover:shadow-lg hover:shadow-gold/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
               >
                 Shop Now
               </Link>
               <Link
                 href="/categories"
                 data-motion="286"
-                className="inline-flex items-center justify-center px-8 py-3.5 border border-charcoal/20 text-charcoal text-sm font-medium tracking-wide hover:border-gold hover:text-gold transition-all duration-300"
+                className="inline-flex items-center justify-center rounded-full border border-charcoal/15 bg-surface/65 px-8 py-3.5 text-charcoal text-sm font-medium tracking-wide shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:bg-surface hover:text-gold hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
               >
                 Explore Categories
               </Link>
@@ -47,9 +47,9 @@ export function Hero() {
 
           {/* Hero visual */}
           <div className="relative order-1 lg:order-2">
-            <div className="relative aspect-[4/5] max-w-lg mx-auto">
+            <div className="relative my-6 aspect-[4/5] max-w-lg mx-auto sm:my-8 lg:my-12">
               {/* Main image placeholder */}
-              <div className="absolute inset-0 bg-gradient-to-br from-warm-gray to-cream border border-border flex items-center justify-center overflow-hidden">
+              <div className="hero-image-placeholder absolute inset-0 overflow-hidden rounded-[2rem] border border-white/70 bg-gradient-to-br from-warm-gray to-cream shadow-[0_18px_50px_rgba(64,47,22,0.12)] flex items-center justify-center">
                 <div className="text-center p-8">
                   <div className="w-20 h-20 mx-auto mb-4 border-2 border-gold/30 rounded-full flex items-center justify-center">
                     <svg
@@ -74,8 +74,8 @@ export function Hero() {
               </div>
 
               {/* Floating accent card */}
-              <div className="absolute -bottom-4 -left-4 sm:bottom-8 sm:-left-8 bg-surface border border-border p-3 sm:p-4 shadow-lg max-w-[200px]">
-                <p className="text-[10px] tracking-wider uppercase text-gold mb-1">
+              <div className="hero-feature-card absolute -bottom-4 -left-4 sm:bottom-8 sm:-left-8 max-w-[200px] rounded-2xl border border-white/70 bg-surface/95 p-3 shadow-[0_12px_32px_rgba(64,47,22,0.14)] backdrop-blur sm:p-4">
+                <p className="mb-1 inline-flex rounded-full bg-cream px-2.5 py-1 text-[9px] tracking-wider uppercase text-gold">
                   Featured
                 </p>
                 <p className="text-xs sm:text-sm font-heading font-semibold text-dark">

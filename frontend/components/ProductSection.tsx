@@ -17,7 +17,7 @@ export function ProductSection({
   viewAllHref,
 }: ProductSectionProps) {
   return (
-    <section className="py-16 sm:py-20 lg:py-24">
+    <section className={`product-section ${title.toLowerCase().replaceAll(" ", "-")} py-16 sm:py-20 lg:py-24`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading title={title} subtitle={subtitle} />
         <ProductGrid products={products} />

@@ -7,7 +7,7 @@ const trustItems = [
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-7 h-7"
+        className="trust-svg trust-svg--shield h-12 w-12 sm:h-14 sm:w-14"
       >
         <path
           strokeLinecap="round"
@@ -27,7 +27,7 @@ const trustItems = [
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-7 h-7"
+        className="trust-svg trust-svg--payment h-12 w-12 sm:h-14 sm:w-14"
       >
         <path
           strokeLinecap="round"
@@ -47,7 +47,7 @@ const trustItems = [
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-7 h-7"
+        className="trust-svg trust-svg--truck h-12 w-12 sm:h-14 sm:w-14"
       >
         <path
           strokeLinecap="round"
@@ -67,7 +67,7 @@ const trustItems = [
         viewBox="0 0 24 24"
         strokeWidth={1.5}
         stroke="currentColor"
-        className="w-7 h-7"
+        className="trust-svg trust-svg--message h-12 w-12 sm:h-14 sm:w-14"
       >
         <path
           strokeLinecap="round"
@@ -83,12 +83,12 @@ const trustItems = [
 
 export function TrustSection() {
   return (
-    <section className="py-16 sm:py-20 lg:py-24 border-t border-border">
+    <section className="trust-section py-16 sm:py-20 lg:py-24 border-t border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {trustItems.map((item) => (
-            <div key={item.title} className="text-center">
-              <div className="w-14 h-14 mx-auto mb-4 flex items-center justify-center text-gold border border-gold/20">
+            <div key={item.title} className="trust-item text-center">
+              <div className="trust-icon mx-auto mb-5 flex h-20 w-20 items-center justify-center text-gold sm:h-24 sm:w-24">
                 {item.icon}
               </div>
               <h3 className="font-heading text-base font-semibold text-dark mb-2">

@@ -12,7 +12,7 @@ function CategoryCard({ category }: CategoryCardProps) {
     <Link
       href={`/categories/${category.slug}`}
       data-motion={motionIndex(category.slug)}
-      className="group relative block aspect-[3/4] overflow-hidden bg-cream border border-border hover:border-gold/30 transition-all duration-300"
+      className="category-card group relative block aspect-[3/4] overflow-hidden rounded-2xl bg-cream shadow-[0_8px_28px_rgba(47,35,20,0.08)] ring-1 ring-black/[0.04] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(47,35,20,0.15)]"
     >
       <Image src={category.image || "/jewellery-placeholder.svg"} alt={`${category.name} jewellery collection`} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
 
@@ -20,11 +20,11 @@ function CategoryCard({ category }: CategoryCardProps) {
       <div className="absolute inset-0 bg-dark/0 group-hover:bg-dark/10 transition-colors duration-300" />
 
       {/* Label */}
-      <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-dark/40 to-transparent">
+      <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-dark/65 via-dark/20 to-transparent">
         <h3 className="font-heading text-base sm:text-lg font-semibold text-white mb-0.5">
           {category.name}
         </h3>
-        <p className="text-xs text-white/70">
+        <p className="inline-flex rounded-full border border-white/30 bg-white/15 px-2.5 py-1 text-[10px] text-white/90 backdrop-blur-sm">
           {category.productCount} pieces
         </p>
       </div>
@@ -38,7 +38,7 @@ interface CategorySectionProps {
 
 export function CategorySection({ categories }: CategorySectionProps) {
   return (
-    <section className="py-16 sm:py-20 lg:py-24">
+    <section className="category-section py-16 sm:py-20 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8 sm:mb-12">
           <span className="inline-block text-[10px] tracking-[0.3em] uppercase text-gold font-medium mb-3">

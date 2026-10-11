@@ -80,7 +80,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-block" aria-label="Goynar Gontobbo home">
-              <Image src="/brand-logo.jpg" alt="Goynar Gontobbo" width={1000} height={634} className="h-auto w-40 rounded-sm sm:w-48" />
+              <Image src="/brand-logo.jpg" alt="Goynar Gontobbo" width={1000} height={634} className="h-auto w-48 sm:w-56" />
             </Link>
             <p className="mt-4 text-sm text-cream/50 leading-relaxed">
               Celebrating the art of Bangladeshi jewellery with handcrafted

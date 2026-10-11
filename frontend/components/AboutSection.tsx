@@ -2,12 +2,12 @@ import Link from "next/link";
 
 export function AboutSection() {
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-cream">
+    <section className="about-section py-16 sm:py-20 lg:py-24 bg-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           {/* Image placeholder */}
           <div className="relative aspect-[4/5] max-w-md mx-auto lg:mx-0">
-            <div className="absolute inset-0 bg-gradient-to-br from-warm-gray to-cream border border-border flex items-center justify-center">
+            <div className="about-image-placeholder absolute inset-0 bg-gradient-to-br from-warm-gray to-cream border border-border flex items-center justify-center">
               <div className="text-center p-8">
                 <div className="w-16 h-16 mx-auto mb-3 border-2 border-gold/30 rounded-full flex items-center justify-center">
                   <svg

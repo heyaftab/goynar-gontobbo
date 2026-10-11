@@ -47,9 +47,6 @@ export default function RootLayout({
       className={`${playfair.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem('gg-theme')==='dark')document.documentElement.dataset.theme='dark'}catch(e){}" }} />
-      </head>
       <body className="min-h-full flex flex-col">
         <StoreProvider>
           <Header />

@@ -269,6 +269,7 @@ export function Header() {
             >
               Create account
             </Link>
+            <Link href="/account" className="text-sm font-medium text-charcoal hover:text-gold" onClick={() => setMobileMenuOpen(false)}>My account</Link>
             <button
               type="button"
               className="p-2 text-charcoal hover:text-gold transition-colors"

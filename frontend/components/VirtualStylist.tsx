@@ -61,7 +61,7 @@ export function VirtualStylist({ products }: { products: Product[] }) {
           <aside className="flex min-h-[520px] flex-col border-t border-white/10 p-6 sm:p-8 lg:border-l lg:border-t-0">
             <p className="text-[9px] uppercase tracking-[.28em] text-[#d5b576]">Curated to complement</p>
             <h3 className="mt-3 font-heading text-2xl">Your look, in the details</h3>
-            <p className="mt-2 text-xs leading-5 text-white/55">Choose a category on the model to browse pieces from that collection.</p>
+              <p className="mt-2 text-xs leading-5 text-white/55">Choose a category to preview every matching piece. Scroll down to explore the full collection.</p>
             <div className="mt-7 space-y-3">
               {slots.map((slot) => {
                 const product = worn[slot.key];
@@ -74,12 +74,13 @@ export function VirtualStylist({ products }: { products: Product[] }) {
             </div>
             <div className="mt-7 flex-1 border-t border-white/10 pt-5">
               <div className="flex items-center justify-between"><p className="text-[9px] uppercase tracking-[.24em] text-[#d5b576]">{active ? `${active.label} collection` : "A thoughtful edit"}</p>{active && <button type="button" onClick={() => setActiveSlot(null)} className="text-[10px] text-white/50 hover:text-white">Close</button>}</div>
-              {active ? <div key={activeSlot} className="stylist-enter mt-3 grid max-h-56 grid-cols-3 gap-2 overflow-y-auto pr-1">
+              {active ? <div key={activeSlot} className="stylist-enter mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {options.map((product) => <button key={product.id} type="button" data-motion={motionIndex(product.slug)} onClick={() => choose(active.key, product)} className={`group text-left ${worn[active.key]?.id === product.id ? "opacity-45" : ""}`} aria-label={`Style ${product.name}`}>
-                  <span className="relative block aspect-[4/5] overflow-hidden rounded-lg bg-white/10"><Image src={product.images[0] || "/jewellery-placeholder.svg"} alt={product.name} fill sizes="120px" className="object-cover transition duration-500 group-hover:scale-105" /></span>
-                  <span className="mt-1.5 block truncate text-[9px] text-white/75">{product.name}</span>
-                  <span className="block text-[9px] text-[#d5b576]">৳{product.price.toLocaleString()}</span>
+                  <span className="relative block aspect-[4/5] overflow-hidden rounded-lg bg-white/10"><Image src={product.images[0] || "/jewellery-placeholder.svg"} alt={product.name} fill sizes="(max-width: 640px) 42vw, 160px" className="object-cover transition duration-500 group-hover:scale-105" /></span>
+                  <span className="mt-2 block line-clamp-2 min-h-8 text-[10px] leading-4 text-white/75">{product.name}</span>
+                  <span className="block text-[10px] text-[#d5b576]">৳{product.price.toLocaleString()}</span>
                 </button>)}
+                {!options.length && <p className="col-span-full rounded-xl border border-dashed border-white/15 p-5 text-xs leading-5 text-white/50">There are no pieces in this collection yet. Check back as the catalog grows.</p>}
               </div> : <div className="mt-3 flex h-28 items-center justify-center rounded-xl border border-dashed border-white/15 text-center text-xs leading-5 text-white/40">Hand-finished details,<br />made to be remembered.</div>}
             </div>
             <Link href="/shop" className="mt-5 inline-flex items-center justify-center rounded-full bg-[#d5b576] px-5 py-3 text-[10px] font-semibold uppercase tracking-[.18em] text-[#211e19] transition hover:bg-[#efdaaa]">Discover the collection <span className="ml-3">→</span></Link>

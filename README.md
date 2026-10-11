@@ -92,6 +92,7 @@ goynar-gontobbo/
 │   ├── app/                      # Application code
 │   ├── config/                   # Laravel configuration
 │   ├── database/migrations/      # Catalog and framework migrations
+│   ├── database/seeders/        # Idempotent sample catalog data
 │   ├── routes/                   # Server routes
 │   └── tests/                    # PHPUnit tests
 └── 📖 README.md                  # This project guide
@@ -201,8 +202,8 @@ The server-rendered catalog will then read from Laravel. If the variable is unse
 
 Google profile autofill and sign-in require a **Google Identity Services OAuth web client ID**.
 
-1. Configure the authorized JavaScript origin in Google Cloud.
-2. Set the same client ID as `NEXT_PUBLIC_GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_ID` in Vercel's environment (see `frontend/.env.example`).
+1. Create a Google Identity Services OAuth **Web application** client ID and add the exact storefront origin to its authorized JavaScript origins (`http://localhost:3000` locally and your Vercel domain in production).
+2. Set that same client ID as `NEXT_PUBLIC_GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_ID` in the frontend environment (see `frontend/.env.example`). The server verifies the token signature, issuer, audience, expiry, and verified email. Login requests must be same-origin and create a short-lived HTTP-only cookie.
 
 How it works:
 

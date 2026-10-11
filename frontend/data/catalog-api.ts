@@ -1,6 +1,7 @@
 import type { Category, Product } from "@/types";
 import { categories as mockCategories } from "@/data/mock-categories";
-import { bestSellers as mockBestSellers, mockProducts, newArrivals as mockNewArrivals } from "@/data/mock-products";
+import { mockProducts } from "@/data/mock-products";
+import { loadWorkspace } from "@/lib/demo-data";
 
 type Filters = { q?: string; category?: string; newArrivals?: boolean; bestSellers?: boolean };
 type ApiProduct = {
@@ -18,11 +19,20 @@ type ApiProduct = {
 };
 
 const apiBase = process.env.LARAVEL_API_URL?.replace(/\/$/, "");
+const storefrontBase = process.env.NEXT_PUBLIC_STOREFRONT_URL?.replace(/\/$/, "");
 const placeholder = "/jewellery-placeholder.svg";
+
+function resolveImageUrl(imageUrl: string): string {
+  if (/^(https?:)?\/\//i.test(imageUrl) || imageUrl.startsWith("data:")) return imageUrl;
+  // Seeded catalog image paths refer to frontend/public assets. When the API
+  // and storefront are deployed separately, serve those paths from the store.
+  if (storefrontBase && imageUrl.startsWith("/assets/")) return `${storefrontBase}${imageUrl}`;
+  return imageUrl;
+}
 
 function toProduct(item: ApiProduct): Product {
   const localProduct = mockProducts.find((product) => product.slug === item.slug);
-  const apiImages = item.images?.map(({ image_url }) => image_url).filter((image) => Boolean(image) && image !== placeholder) ?? [];
+  const apiImages = item.images?.map(({ image_url }) => resolveImageUrl(image_url)).filter((image) => Boolean(image) && image !== placeholder) ?? [];
   return {
     id: String(item.id),
     name: item.name,
@@ -41,10 +51,10 @@ function toProduct(item: ApiProduct): Product {
 }
 
 function fromMock(filters: Filters): Product[] {
-  let products = mockProducts;
+  let products = loadWorkspace().products;
   if (filters.category) products = products.filter((item) => item.categorySlug === filters.category);
-  if (filters.newArrivals) products = mockNewArrivals.filter((item) => !filters.category || item.categorySlug === filters.category);
-  if (filters.bestSellers) products = mockBestSellers.filter((item) => !filters.category || item.categorySlug === filters.category);
+  if (filters.newArrivals) products = products.filter((item) => item.isNewArrival);
+  if (filters.bestSellers) products = products.filter((item) => item.isBestSeller);
   if (filters.q) {
     const query = filters.q.toLowerCase();
     products = products.filter((item) => `${item.name} ${item.category} ${item.description ?? ""}`.toLowerCase().includes(query));
@@ -70,13 +80,13 @@ export async function getProducts(filters: Filters = {}): Promise<Product[]> {
 }
 
 export async function getProduct(slug: string): Promise<Product | undefined> {
-  if (!apiBase) return mockProducts.find((item) => item.slug === slug);
+  if (!apiBase) return loadWorkspace().products.find((item) => item.slug === slug);
   try {
     const response = await fetch(`${apiBase}/api/v1/products/${encodeURIComponent(slug)}`, { next: { revalidate: 60 } });
-    if (!response.ok) return mockProducts.find((item) => item.slug === slug);
+    if (!response.ok) return loadWorkspace().products.find((item) => item.slug === slug);
     return toProduct(await response.json() as ApiProduct);
   } catch {
-    return mockProducts.find((item) => item.slug === slug);
+    return loadWorkspace().products.find((item) => item.slug === slug);
   }
 }
 
@@ -90,7 +100,7 @@ export async function getCategories(): Promise<Category[]> {
       id: String(item.id),
       name: item.name,
       slug: item.slug,
-      image: item.image && item.image !== placeholder ? item.image : mockCategories.find((category) => category.slug === item.slug)?.image || placeholder,
+      image: item.image && item.image !== placeholder ? resolveImageUrl(item.image) : mockCategories.find((category) => category.slug === item.slug)?.image || placeholder,
       productCount: item.products_count ?? 0,
     }));
   } catch {

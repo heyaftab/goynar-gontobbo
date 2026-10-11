@@ -1,21 +1,40 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
 const storageKey = "gg-theme";
 
+function subscribe(listener: () => void) {
+  window.addEventListener("gg-theme-change", listener);
+  return () => window.removeEventListener("gg-theme-change", listener);
+}
+
+function getSnapshot() {
+  return document.documentElement.dataset.theme === "dark";
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 export function ThemeToggle({ compact = false }: { compact?: boolean }) {
-  const [dark, setDark] = useState(false);
+  const dark = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   useEffect(() => {
-    setDark(document.documentElement.dataset.theme === "dark");
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved === "dark" || saved === "light") document.documentElement.dataset.theme = saved;
+    } catch {
+      // Keep the default light theme when browser storage is unavailable.
+    }
+    window.dispatchEvent(new Event("gg-theme-change"));
   }, []);
 
   function toggleTheme() {
     const next = !dark;
     document.documentElement.dataset.theme = next ? "dark" : "light";
     localStorage.setItem(storageKey, next ? "dark" : "light");
-    setDark(next);
+    window.dispatchEvent(new Event("gg-theme-change"));
   }
 
   return (

@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { mockProducts } from "@/data/mock-products";
+import { loadWorkspace } from "@/lib/demo-data";
 import { useStore } from "@/components/StoreProvider";
 import type { Product } from "@/types";
 
@@ -12,16 +13,18 @@ interface ChatMessage {
   role: "assistant" | "user";
   text: string;
   products?: Product[];
+  actions?: Array<{ label: string; href: string }>;
+  followUp?: string;
 }
 
 const initialMessage: ChatMessage = {
   id: 0,
   role: "assistant",
-  text: "Hello! I’m your Goynar Gontobbo guide. Ask me to find a style or budget, or get help with shopping, delivery, sizing, or your account.",
+  text: "Hello! I’m your Goynar Gontobbo guide. Tell me the style, occasion, material, or budget you have in mind and I’ll help find a piece. I can also guide you around the store.",
 };
 
-const quickQuestions = ["Earrings under ৳3,000", "How does delivery work?", "Help me find my cart"];
-const stopWords = new Set(["i", "me", "my", "a", "an", "the", "for", "with", "show", "find", "want", "need", "some", "please", "under", "below", "less", "than", "taka", "tk", "tks", "budget", "around", "buy", "looking", "recommend", "recommendations"]);
+const quickQuestions = ["Pearl earrings under ৳3,000", "Find bridal jewellery", "How does delivery work?"];
+const stopWords = new Set(["i", "me", "my", "a", "an", "the", "for", "with", "show", "find", "want", "need", "some", "please", "under", "below", "less", "than", "taka", "tk", "tks", "budget", "around", "buy", "looking", "recommend", "recommendations", "something", "beautiful", "piece", "jewellery", "jewelry", "like", "style", "occasion"]);
 
 function guideReply(text: string, cartCount: number, wishlistCount: number): Omit<ChatMessage, "id" | "role"> {
   const query = text.toLocaleLowerCase().trim();
@@ -49,7 +52,10 @@ function guideReply(text: string, cartCount: number, wishlistCount: number): Omi
     return { text: "Online ordering and payment are not connected yet. You can browse pieces and save them to your cart or wishlist in this browser.", products: [] };
   }
   if (links(["account", "login", "log in", "sign in", "google", "register", "create account"])) {
-    return { text: "Open your account page to sign in with Google or create an account. Google sign-in needs the store’s Google client ID configured; password-based account creation is still being prepared.", products: [] };
+    return { text: "I can take you to your account to review your own saved profile, preferences, cart, and wishlist. I can’t reveal private information belonging to another account. This preview’s role demo accounts are local to your browser.", actions: [{ label: "Open my account", href: "/account" }, { label: "Sign in", href: "/login" }] };
+  }
+  if (links(["my personal data", "my information", "my address", "my phone", "my notes", "private data", "personal information", "someone else", "another customer"])) {
+    return { text: "I can’t disclose private profile details, addresses, contact information, or notes in chat. You can review and edit your own saved details in your account. I can help you find jewellery without using private account data.", actions: [{ label: "Open my account", href: "/account" }] };
   }
   if (links(["contact", "help", "support", "faq", "question"])) {
     return { text: "I can help you browse products, check this demo’s delivery and checkout details, or find a store page. For more information, see the FAQs or Contact Us page." };
@@ -68,18 +74,21 @@ function guideReply(text: string, cartCount: number, wishlistCount: number): Omi
   const matchedCategories = categoryRules.find(([pattern]) => pattern.test(query))?.[1];
   const materialPattern = /pearl|kundan|silver|gold|rose gold|antique|green|ruby/;
   const tokens = query.split(/[^\p{L}\p{N}]+/u).filter((token) => token.length > 2 && !stopWords.has(token) && !/^\d+$/.test(token));
-  const ranked = mockProducts
+  const catalog = typeof window === "undefined" ? mockProducts : loadWorkspace().products;
+  const ranked = catalog
     .filter((product) => product.inStock)
     .filter((product) => !budget || product.price <= budget)
     .filter((product) => !matchedCategories || matchedCategories.includes(product.categorySlug))
     .map((product) => {
       const words = `${product.name} ${product.category} ${product.description ?? ""}`.toLocaleLowerCase();
-      const matchScore = tokens.reduce((score, token) => score + (words.includes(token) ? 2 : 0), 0);
+      const matchScore = tokens.reduce((score, token) => score + (words.includes(token) ? (token.length > 5 ? 3 : 2) : 0), 0);
       const materialScore = materialPattern.test(query) && words.includes(query.match(materialPattern)?.[0] ?? "") ? 2 : 0;
+      const occasionScore = /bridal|wedding|party|festive|gift/.test(query) && /bridal|set|kundan|jhumka|necklace/i.test(words) ? 2 : 0;
       const categoryScore = matchedCategories ? 3 : 0;
-      const score = matchScore + materialScore + categoryScore + (product.isBestSeller ? 1 : 0);
+      const score = matchScore + materialScore + occasionScore + categoryScore + (product.isBestSeller ? 1 : 0);
       return { product, score };
     })
+    .filter((entry) => !tokens.length || entry.score > 0 || matchedCategories || budget)
     .sort((a, b) => b.score - a.score || a.product.price - b.product.price);
 
   if (budget || matchedCategories || tokens.length) {
@@ -87,12 +96,19 @@ function guideReply(text: string, cartCount: number, wishlistCount: number): Omi
     if (products.length) {
       const budgetDescription = budget ? ` under ৳${budget.toLocaleString()}` : "";
       const categoryDescription = matchedCategories ? ` in ${matchedCategories[0]}` : "";
-      return { text: `Here are a few available${categoryDescription}${budgetDescription} that may suit you. These are sample catalogue listings, so please check confirmed details before ordering.`, products };
+      return { text: `I found ${products.length === 1 ? "a piece" : "a few pieces"}${categoryDescription}${budgetDescription} that may fit. You can open a product to see its full images and details. These are preview listings, and checkout is not active.`, products, followUp: "Would you like me to open one of these for you?" };
     }
     return { text: `I couldn’t find an in-stock match${budget ? ` under ৳${budget.toLocaleString()}` : ""}. Try another budget or browse all categories.`, products: [] };
   }
 
-  return { text: "I can help find earrings, bangles, necklaces, rings, or sets by style and budget. Try “pearl earrings under ৳3,000” or tap one of the suggestions below." };
+  if (links(["occasion", "gift", "wedding", "bridal", "party", "festive", "everyday"])) {
+    return { text: "I can narrow it down by occasion. For bridal or wedding looks, try a set, kundan, or jhumka; for everyday wear, pearl drops, studs, and simple cuffs are easy starting points. What is the occasion and budget?", actions: [{ label: "Browse sets", href: "/categories/sets" }, { label: "Browse jhumka", href: "/categories/jhumka" }] };
+  }
+  if (links(["what do you have", "collections", "categories", "browse", "guide me", "help me choose"])) {
+    return { text: "You can explore earrings, rings, bangles, necklaces, jhumka, cuffs, tana, and sets. Tell me a category, material, occasion, or budget and I’ll suggest matching pieces.", actions: [{ label: "Browse all jewellery", href: "/shop" }, { label: "View categories", href: "/categories" }] };
+  }
+
+  return { text: "I’m not sure I understood that yet. Tell me a category (like jhumka or bangles), a material (like pearl or kundan), an occasion, or a maximum budget and I’ll find some options." };
 }
 
 export function ChatAssistant() {
@@ -134,6 +150,7 @@ export function ChatAssistant() {
                 <div className={`max-w-[92%] rounded-2xl px-3.5 py-3 text-sm leading-6 ${message.role === "user" ? "rounded-br-md bg-charcoal text-white" : "rounded-bl-md border border-border bg-white text-charcoal shadow-sm"}`}>
                   <p>{message.text}</p>
                   {message.role === "assistant" && message.text.includes("FAQs") && <div className="mt-2 flex gap-3 text-xs font-semibold text-gold-dark"><Link href="/faq">FAQs</Link><Link href="/contact">Contact Us</Link></div>}
+                  {message.role === "assistant" && message.actions && <div className="mt-3 flex flex-wrap gap-2">{message.actions.map((action) => <Link key={action.href} href={action.href} className="rounded-full border border-gold/35 bg-cream px-3 py-1.5 text-[11px] font-semibold text-gold-dark hover:border-gold">{action.label}</Link>)}</div>}
                   {message.role === "assistant" && message.text.includes("size guide") && <Link href="/size-guide" className="mt-2 inline-block text-xs font-semibold text-gold-dark underline underline-offset-4">Open size guide</Link>}
                   {message.role === "assistant" && message.text.includes("account page") && <Link href="/account" className="mt-2 inline-block text-xs font-semibold text-gold-dark underline underline-offset-4">Go to your account</Link>}
                   {message.role === "assistant" && message.text.includes("shopping bag") && <Link href="/cart" className="mt-2 inline-block text-xs font-semibold text-gold-dark underline underline-offset-4">Open shopping bag</Link>}
@@ -141,10 +158,11 @@ export function ChatAssistant() {
                   {message.products?.map((product) => (
                     <article key={product.id} className="mt-3 flex items-center gap-3 rounded-xl border border-border bg-ivory p-2">
                       <Link href={`/products/${product.slug}`} className="relative h-16 w-14 shrink-0 overflow-hidden rounded-lg bg-cream"><Image src={product.images[0] || "/jewellery-placeholder.svg"} alt={product.name} fill sizes="56px" className="object-cover" /></Link>
-                      <div className="min-w-0 flex-1"><Link href={`/products/${product.slug}`} className="line-clamp-2 text-xs font-semibold leading-5 text-dark hover:text-gold-dark">{product.name}</Link><p className="text-xs text-muted">{product.currency}{product.price.toLocaleString()}</p></div>
-                      <button type="button" onClick={() => addToCart(product)} disabled={!product.inStock} className="rounded-lg bg-charcoal px-2.5 py-2 text-[10px] font-semibold text-white transition hover:bg-gold-dark disabled:opacity-50" aria-label={`Add ${product.name} to cart`}>Add</button>
+                      <div className="min-w-0 flex-1"><Link href={`/products/${product.slug}`} className="line-clamp-2 text-xs font-semibold leading-5 text-dark hover:text-gold-dark">{product.name}</Link><p className="text-xs text-muted">{product.currency}{product.price.toLocaleString()} · {product.category}</p></div>
+                      <div className="flex shrink-0 flex-col gap-1"><Link href={`/products/${product.slug}`} className="rounded-lg border border-charcoal px-2.5 py-1.5 text-center text-[10px] font-semibold text-charcoal transition hover:border-gold-dark hover:text-gold-dark">Open</Link><button type="button" onClick={() => addToCart(product)} disabled={!product.inStock} className="rounded-lg bg-charcoal px-2.5 py-1.5 text-[10px] font-semibold text-white transition hover:bg-gold-dark disabled:opacity-50" aria-label={`Add ${product.name} to cart`}>Add</button></div>
                     </article>
                   ))}
+                  {message.followUp && <p className="mt-3 text-xs font-medium text-gold-dark">{message.followUp}</p>}
                 </div>
               </div>
             ))}

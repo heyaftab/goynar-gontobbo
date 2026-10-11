@@ -145,11 +145,11 @@ export function Header() {
 
       {/* Main header */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center h-16 lg:h-20">
           {/* Mobile menu button */}
           <button
             type="button"
-            className="lg:hidden p-2 -ml-2 text-charcoal hover:text-gold transition-colors"
+            className="lg:hidden mr-2 p-2 -ml-2 text-charcoal hover:text-gold transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -157,8 +157,8 @@ export function Header() {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center transition-transform duration-300 hover:scale-[1.025]" aria-label="Goynar Gontobbo home">
-            <Image src="/brand-logo.jpg" alt="Goynar Gontobbo" width={1000} height={613} priority className="h-[4.3rem] w-[7.2rem] object-contain sm:h-[4.8rem] sm:w-[8rem] lg:h-[5.5rem] lg:w-[9rem]" />
+          <Link href="/" className="mr-auto flex shrink-0 items-center transition-transform duration-300 hover:scale-[1.025]" aria-label="Goynar Gontobbo home">
+            <Image src="/assets/Luxurious%20Gold%20Goynar%20Gontobbo%20Monogram.png" alt="Goynar Gontobbo" width={1254} height={1254} priority className="h-12 w-12 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
           </Link>
 
           {/* Desktop nav */}

@@ -85,7 +85,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <Link
             href={`/products/${product.slug}`}
             data-motion={motionIndex(`${product.slug}-quick`)}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/70 bg-[#fbf7ef]/95 px-4 py-3 text-center text-[11px] font-semibold tracking-[0.08em] text-[#49391f] shadow-[0_5px_18px_rgba(49,35,16,0.14)] backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#d5b576] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b58c43] focus-visible:ring-offset-2"
+            className="product-card-action inline-flex w-full items-center justify-center gap-2 rounded-full border border-gold-dark bg-gold px-4 py-3 text-center text-[11px] font-semibold tracking-[0.08em] text-white shadow-[0_5px_18px_rgba(49,35,16,0.14)] backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-gold-dark hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b58c43] focus-visible:ring-offset-2"
           >
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-4 w-4"><path strokeLinecap="round" strokeLinejoin="round" d="M2.5 12s3.2-6 9.5-6 9.5 6 9.5 6-3.2 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg>
             <span>View this piece</span>
@@ -119,7 +119,7 @@ export function ProductCard({ product }: ProductCardProps) {
           data-motion={motionIndex(`${product.slug}-cart`)}
           onClick={() => addToCart(product)}
           disabled={!product.inStock}
-          className="group/cart mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#c6a260]/60 bg-[#fbf7ef] px-4 py-2.5 text-[11px] font-semibold tracking-[0.08em] text-[#49391f] shadow-[0_2px_8px_rgba(91,68,30,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#b58c43] hover:bg-[#d5b576] hover:text-white hover:shadow-[0_6px_16px_rgba(91,68,30,0.16)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b58c43] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-border disabled:bg-cream disabled:text-muted disabled:shadow-none disabled:hover:translate-y-0"
+          className="product-card-action group/cart mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full border border-gold-dark bg-gold px-4 py-2.5 text-[11px] font-semibold tracking-[0.08em] text-white shadow-[0_2px_8px_rgba(91,68,30,0.12)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#5b4318] hover:bg-gold-dark hover:text-white hover:shadow-[0_6px_16px_rgba(91,68,30,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b58c43] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-border disabled:bg-cream disabled:text-muted disabled:shadow-none disabled:hover:translate-y-0"
         >
           {product.inStock ? <><span aria-hidden="true" className="text-sm leading-none transition-transform group-hover/cart:scale-110">＋</span><span>Add to bag</span></> : "Out of Stock"}
         </button>

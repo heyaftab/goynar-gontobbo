@@ -26,6 +26,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#product-search::-webkit-search-cancel-button {
+  display: none;
+}
+
 .hero-shell {
   background-image:
     radial-gradient(circle at 88% 14%, rgba(201, 169, 110, 0.2), transparent 27%),
@@ -229,6 +233,20 @@ html[data-theme="dark"] [class~="bg-surface"] {
   background-color: #2d2633 !important;
 }
 
+html[data-theme="dark"] .product-card-action:not(:disabled),
+html[data-theme="dark"] .product-card-action:not(:disabled):hover {
+  border-color: #b58c43 !important;
+  background-color: #f4f0e9 !important;
+  color: #1a1a1a !important;
+}
+
+html[data-theme="dark"] .assistant-toggle {
+  border-color: #b58c43;
+  background-color: #f4f0e9;
+  background-image: none;
+  color: #1a1a1a;
+}
+
 html[data-theme="dark"] .hero-shell {
   background-color: var(--night-ink) !important;
   background-image:
@@ -241,6 +259,24 @@ html[data-theme="dark"] header {
   background-color: rgba(37, 29, 43, 0.94) !important;
   border-color: rgba(224, 189, 119, 0.2) !important;
   box-shadow: 0 10px 32px rgba(7, 4, 10, 0.22);
+}
+
+html[data-theme="dark"] .search-shell > div > header {
+  background-color: transparent !important;
+  box-shadow: none;
+}
+
+html[data-theme="dark"] .search-shell input#product-search {
+  background-color: transparent !important;
+}
+
+html[data-theme="dark"] .search-shell #search-suggestions {
+  background-color: var(--color-surface) !important;
+}
+
+html[data-theme="dark"] .search-shell #search-suggestions li[aria-selected="true"],
+html[data-theme="dark"] .search-shell #search-suggestions a:hover {
+  background-color: var(--night-plum) !important;
 }
 
 html[data-theme="dark"] header > div:first-child {

@@ -109,9 +109,9 @@ export function SearchExperience({ products, initialQuery = "" }: { products: Pr
           <h1 className="animate-search-rise mt-3 font-heading text-4xl text-dark [animation-delay:80ms] sm:text-5xl">A little sparkle, just right</h1>
           <p className="animate-search-rise mx-auto mt-4 max-w-xl text-sm leading-6 text-muted [animation-delay:140ms]">Search by style, stone, or type. We’ll bring the closest pieces to the top.</p>
 
-          <form onSubmit={submitSearch} role="search" className="animate-search-rise group relative mt-8 [animation-delay:200ms]">
+          <form onSubmit={submitSearch} role="search" className="animate-search-rise group relative z-[60] mt-8 [animation-delay:200ms]">
             <label htmlFor="product-search" className="sr-only">Search jewellery</label>
-            <div className="relative flex overflow-hidden rounded-2xl border border-border bg-white shadow-[0_12px_50px_rgba(49,39,22,0.08)] transition duration-300 focus-within:border-gold focus-within:shadow-[0_16px_55px_rgba(184,134,11,0.16)]">
+            <div className="relative flex overflow-hidden rounded-2xl border border-border bg-transparent shadow-[0_12px_50px_rgba(49,39,22,0.08)] transition duration-300 focus-within:border-gold focus-within:shadow-[0_16px_55px_rgba(184,134,11,0.16)]">
               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="ml-4 mt-4 h-5 w-5 shrink-0 text-gold-dark transition-transform duration-300 group-focus-within:scale-110"><circle cx="10.8" cy="10.8" r="6.8"/><path strokeLinecap="round" d="m16 16 4.5 4.5"/></svg>
               <input id="product-search" type="search" role="combobox" aria-autocomplete="list" aria-expanded={suggestions.length > 0} aria-controls="search-suggestions" aria-activedescendant={activeSuggestion >= 0 ? `search-suggestion-${activeSuggestion}` : undefined} autoComplete="off" value={query} onChange={(event) => { setQuery(event.target.value); setActiveCategory("All pieces"); setActiveSuggestion(-1); }} onKeyDown={(event) => {
                 if (event.key === "ArrowDown" && suggestions.length) { event.preventDefault(); setActiveSuggestion((current) => Math.min(current + 1, suggestions.length - 1)); }
@@ -119,7 +119,7 @@ export function SearchExperience({ products, initialQuery = "" }: { products: Pr
                 if (event.key === "Escape") { setQuery(""); setActiveSuggestion(-1); }
               }} placeholder="Try ‘pearl earrings’ or ‘gold bangles’" className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm text-dark outline-none placeholder:text-muted/70 sm:text-base" />
               {query && <button type="button" onClick={() => { setQuery(""); setActiveCategory("All pieces"); }} className="my-2 mr-2 rounded-full px-3 text-xl text-muted transition hover:bg-cream hover:text-dark" aria-label="Clear search">×</button>}
-              <button type="submit" className="m-1.5 hidden shrink-0 rounded-xl bg-charcoal px-5 text-sm font-semibold text-white transition duration-200 hover:bg-gold-dark sm:inline-flex sm:items-center">Search</button>
+              <button type="submit" className="m-1.5 hidden shrink-0 rounded-xl border border-gold-light/50 bg-charcoal px-5 text-sm font-semibold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-gold-dark hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-light sm:inline-flex sm:items-center">Search</button>
             </div>
             {suggestions.length > 0 && (
               <ul id="search-suggestions" role="listbox" className="absolute left-0 right-0 top-full z-40 mt-2 overflow-hidden rounded-2xl border border-border bg-white text-left shadow-2xl">

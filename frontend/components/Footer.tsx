@@ -59,7 +59,7 @@ export function Footer() {
                 name="email"
                 required
                 placeholder="Your email address"
-                className="flex-1 px-4 py-3 bg-cream/10 border border-cream/20 text-cream placeholder-cream/40 text-sm focus:outline-none focus:border-gold transition-colors"
+                className="flex-1 rounded-xl px-4 py-3 bg-cream/10 border border-cream/20 text-cream placeholder-cream/40 text-sm focus:outline-none focus:border-gold transition-colors"
                 aria-label="Email address for newsletter"
               />
               <button
@@ -80,7 +80,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-block" aria-label="Goynar Gontobbo home">
-              <Image src="/brand-logo.jpg" alt="Goynar Gontobbo" width={1000} height={634} className="h-auto w-48 sm:w-56" />
+              <Image src="/assets/Luxurious%20Gold%20Goynar%20Gontobbo%20Monogram.png" alt="Goynar Gontobbo" width={1254} height={1254} className="h-32 w-32 object-contain sm:h-40 sm:w-40" />
             </Link>
             <p className="mt-4 text-sm text-cream/50 leading-relaxed">
               Celebrating the art of Bangladeshi jewellery with handcrafted

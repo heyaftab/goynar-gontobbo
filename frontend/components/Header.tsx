@@ -140,7 +140,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-surface/95 backdrop-blur-sm border-b border-border">
       {/* Top bar */}
       <div className="bg-charcoal text-cream text-xs text-center py-1.5 tracking-wide hidden sm:block">
-        Free delivery on orders over ৳5,000 across Bangladesh
+        Free delivery on orders over ৳2,000 across Bangladesh
       </div>
 
       {/* Main header */}

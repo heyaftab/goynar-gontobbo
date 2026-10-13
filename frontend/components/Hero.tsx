@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Hero() {
   return (
@@ -48,29 +49,15 @@ export function Hero() {
           {/* Hero visual */}
           <div className="relative order-1 lg:order-2">
             <div className="relative my-6 aspect-[4/5] max-w-lg mx-auto sm:my-8 lg:my-12">
-              {/* Main image placeholder */}
-              <div className="hero-image-placeholder absolute inset-0 overflow-hidden rounded-[2rem] border border-white/70 bg-gradient-to-br from-warm-gray to-cream shadow-[0_18px_50px_rgba(64,47,22,0.12)] flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-20 h-20 mx-auto mb-4 border-2 border-gold/30 rounded-full flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1}
-                      stroke="currentColor"
-                      className="w-10 h-10 text-gold/40"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M2.25 15.75l5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z"
-                      />
-                    </svg>
-                  </div>
-                  <p className="text-xs text-muted tracking-wide uppercase">
-                    Hero Image
-                  </p>
-                </div>
+              <div className="hero-image-placeholder absolute inset-0 overflow-hidden rounded-[2rem] border border-white/70 bg-gradient-to-br from-warm-gray to-cream shadow-[0_18px_50px_rgba(64,47,22,0.12)]">
+                <Image
+                  src="/assets/GoynarGontobboModel.png"
+                  alt="Model wearing handcrafted jewellery from Goynar Gontobbo"
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 90vw, 40vw"
+                  className="object-cover"
+                />
               </div>
 
               {/* Floating accent card */}

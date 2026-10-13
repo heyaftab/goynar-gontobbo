@@ -329,3 +329,13 @@ The repository is prepared for **Vercel** (frontend) and **Render** (Laravel API
 <br />
 
 </div>
+
+## License
+
+Copyright © 2026 Aftab Uddin Ahmad. All Rights Reserved.
+
+This project is proprietary software. The source code is publicly available for viewing, learning, evaluation, and portfolio purposes only.
+
+Commercial use, redistribution, or substantial reuse requires prior written permission from the copyright holder.
+
+See the [LICENSE](https://chatgpt.com/c/LICENSE) file for the complete terms.

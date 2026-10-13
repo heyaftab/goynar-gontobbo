@@ -19,6 +19,9 @@ RUN composer install --no-dev --no-interaction --no-scripts --prefer-dist --opti
 
 COPY . .
 
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN chmod +x /usr/local/bin/docker-entrypoint
+
 RUN composer dump-autoload --no-dev --no-interaction --no-scripts --optimize \
     && php artisan package:discover --ansi \
     && mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/app/private storage/app/public storage/logs bootstrap/cache \
@@ -27,4 +30,4 @@ RUN composer dump-autoload --no-dev --no-interaction --no-scripts --optimize \
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "if ! php artisan key:generate --show >/dev/null 2>&1; then php artisan key:generate --force; fi && php artisan migrate --force && php artisan db:seed --force && exec apache2-foreground"]
+CMD ["/usr/local/bin/docker-entrypoint"]

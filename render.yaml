@@ -14,7 +14,6 @@ services:
         value: "false"
       - key: APP_KEY
         generateValue: true
-        sync: false
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_URL
@@ -24,9 +23,9 @@ services:
       - key: CACHE_STORE
         value: file
       - key: SESSION_DRIVER
-        value: file
+        value: array
       - key: SESSION_ENCRYPT
-        value: "true"
+        value: "false"
       - key: QUEUE_CONNECTION
         value: sync
       - key: LOG_CHANNEL

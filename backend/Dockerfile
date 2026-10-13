@@ -27,4 +27,4 @@ RUN composer dump-autoload --no-dev --no-interaction --no-scripts --optimize \
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && exec apache2-foreground"]
+CMD ["sh", "-c", "if ! php artisan key:generate --show >/dev/null 2>&1; then php artisan key:generate --force; fi && php artisan migrate --force && php artisan db:seed --force && exec apache2-foreground"]

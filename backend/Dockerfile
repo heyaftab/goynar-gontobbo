@@ -27,4 +27,4 @@ RUN composer dump-autoload --no-dev --no-interaction --no-scripts --optimize \
 
 EXPOSE 10000
 
-CMD ["apache2-foreground"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && exec apache2-foreground"]

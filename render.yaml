@@ -7,7 +7,6 @@ services:
     plan: free
     region: singapore
     healthCheckPath: /up
-    dockerCommand: sh -c "php artisan migrate --force && php artisan db:seed --force && apache2-foreground"
     envVars:
       - key: APP_ENV
         value: production

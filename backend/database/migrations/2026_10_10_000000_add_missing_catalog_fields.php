@@ -20,7 +20,8 @@ return new class extends Migration
         });
 
         Schema::table('products', function (Blueprint $table) {
-            $table->decimal('compare_at_price', 12, 2)->nullable()->after('price');
+            // Keep this migration portable across SQLite, PostgreSQL, and MySQL.
+            $table->decimal('compare_at_price', 12, 2)->nullable();
             $table->boolean('is_new_arrival')->default(false);
             $table->boolean('is_best_seller')->default(false);
         });

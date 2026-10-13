@@ -14,6 +14,7 @@ services:
         value: "false"
       - key: APP_KEY
         generateValue: true
+        sync: false
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_URL

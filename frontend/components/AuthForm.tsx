@@ -2,11 +2,11 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { demoAccounts, demoUserForEmail, roleLabels } from "@/lib/demo-accounts";
 import { loadWorkspace, saveWorkspace } from "@/lib/demo-data";
 import { GoogleAutofillButton } from "@/components/GoogleAutofillButton";
+import { BrandImage } from "@/components/BrandImageViewer";
 
 interface AuthFormProps { mode: "login" | "register"; }
 
@@ -44,7 +44,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   return (
     <section className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
       <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-10">
-        <Image src="/assets/Luxurious%20Gold%20Goynar%20Gontobbo%20Monogram.png" alt="Goynar Gontobbo" width={1254} height={1254} className="mx-auto mb-4 h-24 w-24 object-contain" />
+        <BrandImage alt="Goynar Gontobbo" width={1254} height={1254} className="mx-auto mb-4 h-24 w-24 object-contain" />
         <h1 className="font-heading text-center text-3xl text-dark sm:text-4xl">{isRegister ? "Create your account" : "Sign in to your account"}</h1>
         <p className="mx-auto mb-7 mt-3 max-w-lg text-center text-sm leading-6 text-muted">{isRegister ? "Customer registration is a preview. Use a demo account to try role specific account features." : "Enter a demo email or choose a role below. Each account opens a private local preview workspace."}</p>
 

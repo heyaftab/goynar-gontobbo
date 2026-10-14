@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { BrandImage } from "@/components/BrandImageViewer";
 import { mockProducts } from "@/data/mock-products";
 import { loadWorkspace } from "@/lib/demo-data";
 import { useStore } from "@/components/StoreProvider";
@@ -139,7 +140,7 @@ export function ChatAssistant() {
       {open && (
         <section aria-label="Goynar Gontobbo shopping assistant" className="mb-3 flex h-[min(76vh,620px)] w-[min(400px,calc(100vw-2rem))] animate-chat-in flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_24px_80px_rgba(26,26,26,0.24)]">
           <header className="flex items-center gap-3 bg-charcoal px-4 py-4 text-cream">
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-transparent" aria-hidden="true"><Image src="/assets/Luxurious%20Gold%20Goynar%20Gontobbo%20Monogram.png" alt="" width={40} height={40} className="h-full w-full object-contain" /></div>
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-transparent"><BrandImage alt="" width={40} height={40} className="h-full w-full object-contain" /></div>
             <div className="min-w-0 flex-1"><h2 className="font-heading text-lg">Jewellery Guide</h2></div>
             <button type="button" onClick={() => setOpen(false)} className="rounded-full p-2 text-cream/80 transition hover:bg-white/10 hover:text-white" aria-label="Close assistant">×</button>
           </header>
@@ -179,7 +180,7 @@ export function ChatAssistant() {
       )}
 
       <button type="button" data-motion="178" onClick={() => setOpen((current) => !current)} className="assistant-toggle ml-auto flex items-center gap-2 rounded-full border-2 border-[#d5b576]/80 bg-gradient-to-br from-[#533a50] via-[#3b2d43] to-[#211b26] px-5 py-3.5 text-sm font-semibold text-[#fff5e5] shadow-[0_8px_24px_rgba(33,20,38,0.34),inset_0_1px_0_rgba(255,255,255,0.18)] transition duration-300 hover:-translate-y-1 hover:brightness-110 hover:shadow-[0_12px_30px_rgba(33,20,38,0.42),inset_0_1px_0_rgba(255,255,255,0.24)] focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2" aria-expanded={open} aria-label={open ? "Close jewellery guide" : "Ask the jewellery guide"}>
-        {open ? <span className="text-lg" aria-hidden="true">×</span> : <Image src="/assets/Luxurious%20Gold%20Goynar%20Gontobbo%20Monogram.png" alt="" aria-hidden="true" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />}
+        {open ? <span className="text-lg" aria-hidden="true">×</span> : <BrandImage alt="" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />}
         <span>{open ? "Close" : "Ask GG"}</span>
       </button>
     </div>

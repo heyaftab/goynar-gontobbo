@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
+import { BrandImage } from "@/components/BrandImageViewer";
 
 const footerLinks = {
   shop: [
@@ -80,7 +80,7 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-block" aria-label="Goynar Gontobbo home">
-              <Image src="/assets/Luxurious%20Gold%20Goynar%20Gontobbo%20Monogram.png" alt="Goynar Gontobbo" width={1254} height={1254} className="h-32 w-32 object-contain sm:h-40 sm:w-40" />
+              <BrandImage alt="Goynar Gontobbo" width={1254} height={1254} className="h-32 w-32 object-contain sm:h-40 sm:w-40" />
             </Link>
             <p className="mt-4 text-sm text-cream/50 leading-relaxed">
               Celebrating the art of Bangladeshi jewellery with handcrafted

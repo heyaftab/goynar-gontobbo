@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { NavItem } from "@/types";
 import { useStore } from "@/components/StoreProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BrandImage } from "@/components/BrandImageViewer";
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
@@ -158,7 +158,7 @@ export function Header() {
 
           {/* Logo */}
           <Link href="/" className="mr-auto flex shrink-0 items-center transition-transform duration-300 hover:scale-[1.025]" aria-label="Goynar Gontobbo home">
-            <Image src="/assets/Luxurious%20Gold%20Goynar%20Gontobbo%20Monogram.png" alt="Goynar Gontobbo" width={1254} height={1254} priority className="h-12 w-12 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+            <BrandImage alt="Goynar Gontobbo" width={1254} height={1254} priority className="h-12 w-12 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
           </Link>
 
           {/* Desktop nav */}

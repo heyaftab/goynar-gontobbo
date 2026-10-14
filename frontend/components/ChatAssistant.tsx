@@ -140,7 +140,7 @@ export function ChatAssistant() {
       {open && (
         <section aria-label="Goynar Gontobbo shopping assistant" className="mb-3 flex h-[min(76vh,620px)] w-[min(400px,calc(100vw-2rem))] animate-chat-in flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-[0_24px_80px_rgba(26,26,26,0.24)]">
           <header className="flex items-center gap-3 bg-charcoal px-4 py-4 text-cream">
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-transparent"><BrandImage alt="" width={40} height={40} className="h-full w-full object-contain" /></div>
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden bg-transparent"><BrandImage alt="" width={40} height={40} className="h-full w-full object-contain" /></div>
             <div className="min-w-0 flex-1"><h2 className="font-heading text-lg">Jewellery Guide</h2></div>
             <button type="button" onClick={() => setOpen(false)} className="rounded-full p-2 text-cream/80 transition hover:bg-white/10 hover:text-white" aria-label="Close assistant">×</button>
           </header>

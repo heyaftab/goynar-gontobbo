@@ -1,37 +1,28 @@
+"use client";
+
 import Link from "next/link";
+import Image from "next/image";
 
 export function AboutSection() {
   return (
     <section className="about-section py-16 sm:py-20 lg:py-24 bg-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
-          {/* Image placeholder */}
-          <div className="relative aspect-[4/5] max-w-md mx-auto lg:mx-0">
-            <div className="about-image-placeholder absolute inset-0 bg-gradient-to-br from-warm-gray to-cream border border-border flex items-center justify-center">
-              <div className="text-center p-8">
-                <div className="w-16 h-16 mx-auto mb-3 border-2 border-gold/30 rounded-full flex items-center justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1}
-                    stroke="currentColor"
-                    className="w-8 h-8 text-gold/40"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M2.25 15.75l5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z"
-                    />
-                  </svg>
-                </div>
-                <p className="text-xs text-muted tracking-wide uppercase">
-                  Brand Image
-                </p>
-              </div>
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+          {/* Center-cropped brand image */}
+          <div className="relative isolate aspect-[4/5] w-full max-w-md justify-self-center mx-auto">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-10 z-0 rounded-[2.5rem] bg-[radial-gradient(ellipse_at_center,rgba(197,154,69,0.5)_0%,rgba(197,154,69,0.24)_48%,transparent_75%)] blur-2xl"
+            />
+            <div className="absolute inset-0 z-10 overflow-hidden rounded-2xl border border-[#c59a45] bg-white/50 p-[3px] shadow-[0_10px_30px_rgba(116,78,22,0.16),inset_0_0_0_1px_rgba(255,239,190,0.75)]">
+              <Image
+                src="/assets/GoynarGontobboBrandImageWhole.png"
+                alt="Goynar Gontobbo jewellery brand image"
+                fill
+                sizes="(max-width: 1024px) 90vw, 448px"
+                className="rounded-[13px] object-cover object-center"
+              />
             </div>
-            {/* Accent line */}
-            <div className="absolute -bottom-3 -right-3 w-full h-full border border-gold/20 -z-10" />
           </div>
 
           {/* Content */}

@@ -20,7 +20,13 @@
 ![Render](https://img.shields.io/badge/Render-API-46E3B7?style=for-the-badge&logo=render&logoColor=black)
 
 <br />
+<img width="1710" height="949" alt="image" src="https://github.com/user-attachments/assets/e9a3afd4-fdb0-4cc1-b049-7c69d6ea632f" />
+<sub><i>The Goynar Gontobbo storefront homepage</i></sub>
 
+<br />
+<br />
+
+[📸 Preview](#-preview) •
 [✨ Features](#-features) •
 [🧰 Tech Stack](#-tech-stack) •
 [🗂 Structure](#-project-structure) •
@@ -49,6 +55,18 @@ flowchart LR
     B -. unset or unreachable .-> D[📦 Local mock catalog]
     C --> E[(🗄 Database)]
 ```
+
+---
+
+## 📸 Preview
+
+<div align="center">
+
+<img src="docs/screenshots/homepage.png" alt="Goynar Gontobbo homepage with hero section, featured Bridal Collection 2025 and Ask GG assistant" width="100%" />
+
+</div>
+
+The homepage opens with a free-delivery announcement bar, a clean navigation header (search, account, wishlist, cart, and light/dark theme toggle), and a hero section featuring the **Bridal Collection 2025**. The floating **Ask GG** button stays available as you browse.
 
 ---
 
@@ -92,9 +110,11 @@ goynar-gontobbo/
 │   ├── app/                      # Application code
 │   ├── config/                   # Laravel configuration
 │   ├── database/migrations/      # Catalog and framework migrations
-│   ├── database/seeders/        # Idempotent sample catalog data
+│   ├── database/seeders/         # Idempotent sample catalog data
 │   ├── routes/                   # Server routes
 │   └── tests/                    # PHPUnit tests
+├── 🖼 docs/
+│   └── screenshots/              # README preview images
 └── 📖 README.md                  # This project guide
 ```
 
@@ -338,4 +358,4 @@ This project is proprietary software. The source code is publicly available for 
 
 Commercial use, redistribution, or substantial reuse requires prior written permission from the copyright holder.
 
-See the [LICENSE](https://chatgpt.com/c/LICENSE) file for the complete terms.
+See the [LICENSE](./LICENSE) file for the complete terms.

@@ -1,9 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
+import { CinematicIntro } from "@/components/CinematicIntro";
 
 export function Hero() {
   return (
-    <section className="hero-shell relative bg-gradient-to-br from-cream via-ivory to-warm-gray overflow-hidden">
+    <>
+    <CinematicIntro />
+    <section className="hero-shell relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute inset-0 opacity-[0.03]">
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-gold blur-3xl" />
@@ -15,18 +18,15 @@ export function Hero() {
           {/* Text content */}
           <div className="flex flex-col justify-center text-center lg:text-left order-2 lg:order-1">
             <span className="inline-block text-[10px] sm:text-xs tracking-[0.3em] uppercase text-gold font-medium mb-4 sm:mb-6">
-              Handcrafted with Love
+              The Goynar Gontobbo Experience
             </span>
             <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-dark leading-[1.1] mb-4 sm:mb-6">
-              Discover the
+              Jewellery That
               <br />
-              <span className="text-gold">Beauty of</span>
-              <br />
-              Bangladeshi Jewellery
+              <span className="text-gold">Tells Your Story</span>
             </h1>
             <p className="text-base sm:text-lg text-muted max-w-md mx-auto lg:mx-0 mb-8 leading-relaxed">
-              Explore our curated collection of handcrafted jewellery that
-              celebrates timeless tradition and modern elegance.
+              Discover timeless pieces crafted to become part of your most beautiful moments.
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
               <Link
@@ -34,14 +34,14 @@ export function Hero() {
                 data-motion="117"
                 className="inline-flex items-center justify-center rounded-full px-8 py-3.5 bg-gold text-white text-sm font-medium tracking-wide shadow-[0_5px_16px_rgba(139,101,8,0.18)] hover:-translate-y-0.5 hover:bg-gold-dark transition-all duration-300 hover:shadow-lg hover:shadow-gold/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
               >
-                Shop Now
+                Explore Collection
               </Link>
               <Link
-                href="/categories"
+                href="/about"
                 data-motion="286"
                 className="inline-flex items-center justify-center rounded-full border border-charcoal/15 bg-surface/65 px-8 py-3.5 text-charcoal text-sm font-medium tracking-wide shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:bg-surface hover:text-gold hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
               >
-                Explore Categories
+                Discover Goynar Gontobbo
               </Link>
             </div>
           </div>
@@ -56,8 +56,9 @@ export function Hero() {
                   fill
                   priority
                   sizes="(max-width: 1024px) 90vw, 40vw"
-                  className="object-cover"
+                  className="hero-cinema-image object-cover"
                 />
+                <div className="hero-cinema-grade" aria-hidden="true" />
               </div>
 
               {/* Floating accent card */}
@@ -66,7 +67,7 @@ export function Hero() {
                   Featured
                 </p>
                 <p className="text-xs sm:text-sm font-heading font-semibold text-dark">
-                  Bridal Collection 2025
+                  Crafted for your moments
                 </p>
               </div>
             </div>
@@ -74,5 +75,6 @@ export function Hero() {
         </div>
       </div>
     </section>
+    </>
   );
 }

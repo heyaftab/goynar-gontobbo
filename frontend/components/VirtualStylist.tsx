@@ -50,10 +50,11 @@ export function VirtualStylist({ products }: { products: Product[] }) {
         </div>
 
         <div className="stylist-panel grid overflow-hidden rounded-[1.75rem] border lg:grid-cols-[minmax(0,1.2fr)_minmax(340px,.8fr)]">
-          <div className="stylist-stage relative min-h-[520px] overflow-hidden sm:min-h-[660px]">
+          <div className="stylist-stage relative min-h-[380px] overflow-hidden sm:min-h-[500px] lg:min-h-[660px]">
             <div className="pointer-events-none absolute inset-0 opacity-30" style={{ backgroundImage: "linear-gradient(115deg,transparent 35%,rgba(232,203,153,.16) 50%,transparent 65%)" }} />
-            <div key={featured?.id} className="stylist-enter absolute inset-5 overflow-hidden rounded-[48%_48%_1.5rem_1.5rem] border border-white/10 shadow-[0_35px_90px_rgba(0,0,0,.42)] sm:inset-x-[12%] sm:inset-y-8">
-              {featured?.images[0] && <Image src={featured.images[0]} alt={`${featured.name} worn in a styling photo`} fill priority sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover object-center transition duration-700" />}
+            <div key={featured?.id} className="stylist-enter absolute inset-5 overflow-hidden rounded-[48%_48%_1.5rem_1.5rem] border border-white/20 shadow-[0_35px_90px_rgba(0,0,0,.48),0_0_40px_rgba(201,169,110,.12)] ring-1 ring-[#d2b36c]/20 sm:inset-x-[12%] sm:inset-y-8">
+              {featured?.images[0] && <Image src={featured.images[0]} alt={`${featured.name} worn in a styling photo`} fill priority sizes="(max-width: 1024px) 100vw, 60vw" className="stylist-photo object-cover object-center" />}
+              <div className="stylist-photo-grade absolute inset-0" aria-hidden="true" />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent p-5 pt-20 sm:p-7 sm:pt-24">
                 <p className="text-[9px] uppercase tracking-[.22em] text-[#e3c887]">{selectedProduct?.category ?? category.name}</p>
                 <p className="mt-1 max-w-[75%] truncate font-heading text-lg text-white sm:text-xl">{featured?.name}</p>
@@ -63,11 +64,12 @@ export function VirtualStylist({ products }: { products: Product[] }) {
             <div className="absolute right-5 top-5 rounded-full border border-white/15 bg-black/15 px-3 py-1.5 text-[9px] uppercase tracking-[.2em] text-white/60 backdrop-blur">Styled for you</div>
           </div>
 
-          <aside className="stylist-aside flex min-h-[520px] flex-col border-t p-6 sm:p-8 lg:border-l lg:border-t-0">
+          <aside className="stylist-aside relative flex min-h-[520px] flex-col border-t p-6 sm:p-8 lg:border-l lg:border-t-0">
+            <div className="stylist-scroll-pattern" aria-hidden="true" />
             <p className="text-[9px] uppercase tracking-[.28em] text-gold-dark">Curated to complement</p>
             <h3 className="mt-3 font-heading text-2xl text-dark">Your look, in the details</h3>
             <p className="mt-2 text-xs leading-5 text-muted">Choose a category, then scroll its pieces below to find your favourite.</p>
-            <div aria-label="Jewellery categories" className="stylist-options-scroll mt-7 max-h-[238px] space-y-3 overflow-y-auto overscroll-contain pr-2">
+            <div aria-label="Jewellery categories" className="stylist-options-scroll relative z-[1] mt-7 max-h-[238px] w-[84%] space-y-3 overflow-y-auto overscroll-contain pr-2 lg:w-[88%]">
               {orderedCategories.map((item) => {
                 const product = products.find((entry) => entry.categorySlug === item.slug);
                 const isActive = activeCategory === item.slug;
@@ -83,7 +85,7 @@ export function VirtualStylist({ products }: { products: Product[] }) {
                 <p className="text-[9px] uppercase tracking-[.24em] text-gold-dark">{category.name} collection</p>
                 <span className="text-[10px] text-muted">{category.productCount} pieces</span>
               </div>
-              {categoryProducts.length ? <div className="stylist-options-scroll grid max-h-[330px] grid-cols-2 gap-3 overflow-y-auto overscroll-contain pr-2 sm:grid-cols-3">
+              {categoryProducts.length ? <div className="stylist-options-scroll relative z-[1] grid max-h-[330px] w-[84%] grid-cols-2 gap-3 overflow-y-auto overscroll-contain pr-2 sm:grid-cols-3 lg:w-[88%]">
                 {categoryProducts.map((product) => <button key={product.id} type="button" data-motion={motionIndex(product.slug)} onClick={() => choose(product)} aria-pressed={selectedProduct?.id === product.id} className={`stylist-product overflow-hidden rounded-xl border text-left transition ${selectedProduct?.id === product.id ? "is-active" : ""}`}>
                   <span className="stylist-thumb relative block aspect-[4/5]"><Image src={product.images[0] || "/jewellery-placeholder.svg"} alt={product.name} fill sizes="(max-width: 640px) 45vw, 150px" className="object-cover" /></span>
                   <span className="block p-2.5"><span className="block truncate text-[10px] font-medium text-dark">{product.name}</span><span className="mt-1 block text-[9px] text-gold-dark">৳{product.price.toLocaleString()}</span></span>
@@ -93,7 +95,7 @@ export function VirtualStylist({ products }: { products: Product[] }) {
           </aside>
         </div>
       </div>
-      <style jsx global>{`@keyframes stylist-reveal{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.stylist-enter{animation:stylist-reveal .55s cubic-bezier(.2,.8,.2,1) both}.stylist-options-scroll{scrollbar-width:thin;scrollbar-color:rgba(213,181,118,.55) rgba(255,255,255,.08)}.stylist-options-scroll::-webkit-scrollbar{width:7px}.stylist-options-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:8px}.stylist-options-scroll::-webkit-scrollbar-thumb{background:rgba(213,181,118,.55);border-radius:8px}@media(prefers-reduced-motion:reduce){.stylist-enter{animation:none!important}}`}</style>
+      <style jsx global>{`@keyframes stylist-reveal{from{opacity:0;transform:translateY(10px) scale(1.02)}to{opacity:1;transform:translateY(0) scale(1)}}.stylist-enter{animation:stylist-reveal .8s cubic-bezier(.2,.8,.2,1) both}.stylist-options-scroll{scrollbar-width:thin;scrollbar-color:rgba(213,181,118,.55) rgba(255,255,255,.08)}.stylist-options-scroll::-webkit-scrollbar{width:7px}.stylist-options-scroll::-webkit-scrollbar-track{background:rgba(255,255,255,.08);border-radius:8px}.stylist-options-scroll::-webkit-scrollbar-thumb{background:rgba(213,181,118,.55);border-radius:8px}@media(prefers-reduced-motion:reduce){.stylist-enter,.stylist-photo{animation:none!important;transform:none!important}}`}</style>
     </section>
   );
 }

@@ -5,6 +5,7 @@ import { AboutSection } from "@/components/AboutSection";
 import { TrustSection } from "@/components/TrustSection";
 import { VirtualStylist } from "@/components/VirtualStylist";
 import { getCategories, getProducts } from "@/data/catalog-api";
+import { HomepageMotion } from "@/components/HomepageMotion";
 
 export const revalidate = 60;
 
@@ -15,7 +16,7 @@ export default async function Home() {
     getProducts({ bestSellers: true }),
   ]);
   return (
-    <>
+    <HomepageMotion>
       <Hero />
       <VirtualStylist products={newArrivals} />
       <CategorySection categories={categories} />
@@ -33,6 +34,6 @@ export default async function Home() {
         viewAllHref="/best-sellers"
       />
       <TrustSection />
-    </>
+    </HomepageMotion>
   );
 }

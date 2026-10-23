@@ -176,7 +176,7 @@ html[data-theme="dark"] .hero-button.bg-gold { color: #19151d; }
 .cinematic-intro__image { z-index: 0; overflow: hidden; opacity: 1; }
 .cinematic-intro__image img {
   object-position: center 48%;
-  filter: saturate(.78) brightness(.68);
+  filter: brightness(0);
   transform: scale(1.265) translate3d(1.2%,0,0);
   backface-visibility: hidden;
   will-change: transform, opacity;

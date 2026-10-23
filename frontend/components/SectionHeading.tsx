@@ -15,7 +15,7 @@ export function SectionHeading({
         alignment === "center" ? "text-center" : "text-left"
       }`}
     >
-      <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-dark mb-3">
+      <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-medium tracking-[-0.025em] text-dark mb-3">
         {title}
       </h2>
       {subtitle && (
@@ -24,7 +24,7 @@ export function SectionHeading({
         </p>
       )}
       <div
-        className={`w-12 h-[1px] bg-gold mt-4 ${
+        className={`section-heading-rule w-12 h-[1px] bg-gold mt-5 ${
           alignment === "center" ? "mx-auto" : ""
         }`}
       />

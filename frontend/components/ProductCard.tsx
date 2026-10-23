@@ -95,16 +95,16 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Product info */}
       <div className="space-y-1.5">
-        <p className="text-[10px] tracking-wider uppercase text-gold font-medium">
+        <p className="product-card__category text-[10px] tracking-wider uppercase text-gold font-medium">
           {product.category}
         </p>
-        <h3 className="font-heading text-sm sm:text-base font-semibold text-dark leading-tight line-clamp-2 group-hover:text-gold transition-colors">
+        <h3 className="product-card__title font-heading text-sm sm:text-base font-semibold text-dark leading-tight line-clamp-2 group-hover:text-gold transition-colors">
           <Link href={`/products/${product.slug}`}>
             {product.name}
           </Link>
         </h3>
         <div className="flex items-center gap-2">
-          <span className="text-sm sm:text-base font-medium text-dark">
+          <span className="product-card__price text-sm sm:text-base font-medium text-dark">
             {product.currency}{product.price.toLocaleString()}
           </span>
           {product.originalPrice && (

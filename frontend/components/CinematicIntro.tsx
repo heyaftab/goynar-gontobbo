@@ -3,12 +3,9 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
-const INTRO_KEY = "goynar_gontobbo_intro_seen";
-// Set true temporarily when iterating on the intro. The shipped default is session based.
-const ALWAYS_PLAY_CINEMATIC_INTRO = false;
 const FULL_INTRO_MS = 6500;
 const REDUCED_INTRO_MS = 1450;
-const SCROLL_REVEAL_MS = 1050;
+const SCROLL_REVEAL_MS = 1350;
 
 export function CinematicIntro() {
   // Render the dark cover in the server HTML so the page is never exposed before hydration.
@@ -19,36 +16,10 @@ export function CinematicIntro() {
   const revealTimer = useRef<number | null>(null);
 
   useEffect(() => {
-    const forcedForPreview = new URLSearchParams(window.location.search).get("intro") === "1";
-    let hasSeenIntro = false;
-    try {
-      hasSeenIntro = sessionStorage.getItem(INTRO_KEY) === "1";
-    } catch {
-      // Play the intro when browser storage is unavailable.
-    }
-    const shouldPlay = ALWAYS_PLAY_CINEMATIC_INTRO || forcedForPreview || !hasSeenIntro;
-
-    if (!shouldPlay) {
-      const frame = window.requestAnimationFrame(() => setVisible(false));
-      return () => window.cancelAnimationFrame(frame);
-    }
-
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const lowPower = navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4;
-    const saveData = "connection" in navigator && Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
-
-    if (lowPower || saveData) {
-      const frame = window.requestAnimationFrame(() => setVisible(false));
-      return () => window.cancelAnimationFrame(frame);
-    }
 
     const timer = window.setTimeout(() => {
       if (userScrollingRef.current) return;
-      try {
-        sessionStorage.setItem(INTRO_KEY, "1");
-      } catch {
-        // The intro should still complete if storage is unavailable.
-      }
       setVisible(false);
     }, reducedMotion ? REDUCED_INTRO_MS : FULL_INTRO_MS);
 
@@ -76,11 +47,6 @@ export function CinematicIntro() {
     userScrollingRef.current = true;
     const nextProgress = Math.min(1, Math.max(.08, distance / Math.max(window.innerHeight * .55, 1)));
     setScrollProgress(nextProgress);
-    try {
-      sessionStorage.setItem(INTRO_KEY, "1");
-    } catch {
-      // The page can still be revealed if storage is unavailable.
-    }
     revealTimer.current = window.setTimeout(() => setVisible(false), SCROLL_REVEAL_MS);
   }
 
@@ -125,7 +91,8 @@ export function CinematicIntro() {
           src="/assets/WhatsApp%20Image%202026-10-09%20at%2016.20.43%20%282%29.jpeg"
           alt=""
           fill
-          priority
+          preload
+          unoptimized
           sizes="100vw"
           className="object-cover"
         />
@@ -135,11 +102,12 @@ export function CinematicIntro() {
       <div className="cinematic-intro__beam" aria-hidden="true" />
       <div className="cinematic-intro__brand">
         <Image
-          src="/assets/Luxurious%20Gold%20Goynar%20Gontobbo%20Monogram.png"
+          src="/assets/GoynarGontobboMonogram.webp"
           alt="Goynar Gontobbo"
           width={112}
           height={112}
-          priority
+          preload
+          unoptimized
           className="cinematic-intro__logo"
         />
         <p className="cinematic-intro__name">GOYNAR GONTOBBO</p>

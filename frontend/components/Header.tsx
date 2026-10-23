@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import type { NavItem } from "@/types";
 import { useStore } from "@/components/StoreProvider";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -132,20 +132,31 @@ function CloseIcon() {
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const { cart } = useStore();
   const cartCount = cart.reduce((count, line) => count + line.quantity, 0);
 
+  useEffect(() => {
+    const updateScrolled = () => setIsScrolled(window.scrollY > 8);
+    updateScrolled();
+    window.addEventListener("scroll", updateScrolled, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrolled);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 bg-surface/95 backdrop-blur-sm border-b border-border">
+    <header className={`site-header sticky top-0 z-50${isScrolled ? " is-scrolled" : ""}`}>
       {/* Top bar */}
-      <div className="bg-charcoal text-cream text-xs text-center py-1.5 tracking-wide hidden sm:block">
-        Free delivery on orders over ৳2,000 across Bangladesh
+      <div className="announcement-bar" aria-label="Store announcement">
+        <p className="announcement-desktop" role="note">Free delivery over ৳2,000 across Bangladesh <span aria-hidden="true">·</span> October privilege: 10% OFF when you join &amp; shop</p>
+        <p className="announcement-mobile" role="note">10% OFF when you join &amp; shop</p>
       </div>
 
       {/* Main header */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center h-16 lg:h-20">
+      <div className="main-nav-shell">
+        <div className="main-nav-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="main-nav-row">
           {/* Mobile menu button */}
           <button
             type="button"
@@ -157,13 +168,13 @@ export function Header() {
           </button>
 
           {/* Logo */}
-          <Link href="/" className="mr-auto flex shrink-0 items-center transition-transform duration-300 hover:scale-[1.025]" aria-label="Goynar Gontobbo home">
-            <BrandImage alt="Goynar Gontobbo" width={1254} height={1254} priority className="h-12 w-12 object-contain sm:h-14 sm:w-14 lg:h-16 lg:w-16" />
+            <Link href="/" className="site-logo flex shrink-0 items-center" aria-label="Goynar Gontobbo home">
+            <BrandImage alt="Goynar Gontobbo" width={1254} height={1254} priority className="h-9 w-9 object-contain lg:h-10 lg:w-10" />
           </Link>
 
           {/* Desktop nav */}
           <nav
-            className="hidden lg:flex items-center gap-8"
+            className="hidden lg:flex items-center main-nav-links"
             aria-label="Main navigation"
           >
             {navItems.map((item) => (
@@ -171,7 +182,8 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 data-motion={navItems.indexOf(item) * 13 + 31}
-                className="text-sm font-medium text-charcoal hover:text-gold transition-colors duration-200 relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[1px] after:bg-gold after:transition-all after:duration-300 hover:after:w-full"
+                aria-current={pathname === item.href ? "page" : undefined}
+                className="main-nav-link"
               >
                 {item.label}
               </Link>
@@ -179,11 +191,11 @@ export function Header() {
           </nav>
 
           {/* Desktop actions */}
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="header-actions">
             <button
               type="button"
               data-motion="203"
-              className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
+              className="header-icon-button flex p-1 text-charcoal hover:text-gold transition-colors"
               aria-label="Search"
               onClick={() => router.push("/search")}
             >
@@ -192,7 +204,7 @@ export function Header() {
             <button
               type="button"
               data-motion="147"
-              className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
+              className="header-icon-button flex p-1 text-charcoal hover:text-gold transition-colors"
               aria-label="Account"
               onClick={() => router.push("/account")}
             >
@@ -201,7 +213,7 @@ export function Header() {
             <button
               type="button"
               data-motion="255"
-              className="hidden sm:flex p-2 text-charcoal hover:text-gold transition-colors"
+              className="header-icon-button flex p-1 text-charcoal hover:text-gold transition-colors"
               aria-label="Wishlist"
               onClick={() => router.push("/wishlist")}
             >
@@ -210,7 +222,7 @@ export function Header() {
             <button
               type="button"
               data-motion="89"
-              className="p-2 text-charcoal hover:text-gold transition-colors relative"
+              className="header-icon-button relative p-2 text-charcoal hover:text-gold transition-colors"
               aria-label={`Cart, ${cartCount} items`}
               onClick={() => router.push("/cart")}
             >
@@ -221,6 +233,7 @@ export function Header() {
             </button>
             <ThemeToggle compact />
           </div>
+        </div>
         </div>
       </div>
 
@@ -248,7 +261,7 @@ export function Header() {
             <ThemeToggle />
             <button
               type="button"
-              className="p-2 text-charcoal hover:text-gold transition-colors"
+              className="header-icon-button p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Search"
               onClick={() => router.push("/search")}
             >
@@ -256,7 +269,7 @@ export function Header() {
             </button>
             <button
               type="button"
-              className="p-2 text-charcoal hover:text-gold transition-colors"
+              className="header-icon-button p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Account"
               onClick={() => router.push("/account")}
             >
@@ -272,7 +285,7 @@ export function Header() {
             <Link href="/account" className="text-sm font-medium text-charcoal hover:text-gold" onClick={() => setMobileMenuOpen(false)}>My account</Link>
             <button
               type="button"
-              className="p-2 text-charcoal hover:text-gold transition-colors"
+              className="header-icon-button p-2 text-charcoal hover:text-gold transition-colors"
               aria-label="Wishlist"
               onClick={() => router.push("/wishlist")}
             >

@@ -30,7 +30,7 @@ export function AboutSection() {
             <span className="inline-block text-[10px] tracking-[0.3em] uppercase text-gold font-medium mb-4">
               Our Story
             </span>
-            <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-dark mb-6 leading-tight">
+            <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-medium tracking-[-0.025em] text-dark mb-6 leading-tight">
               A Celebration of
               <br />
               Bangladeshi Craftsmanship

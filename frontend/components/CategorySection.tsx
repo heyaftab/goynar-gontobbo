@@ -12,7 +12,7 @@ function CategoryCard({ category }: CategoryCardProps) {
     <Link
       href={`/categories/${category.slug}`}
       data-motion={motionIndex(category.slug)}
-      className="category-card group relative block aspect-[3/4] overflow-hidden rounded-2xl bg-cream shadow-[0_8px_28px_rgba(47,35,20,0.08)] ring-1 ring-black/[0.04] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(47,35,20,0.15)]"
+      className="category-card group relative block aspect-[3/4] overflow-hidden rounded-[1.35rem] bg-cream shadow-[0_8px_28px_rgba(47,35,20,0.08)] ring-1 ring-black/[0.04] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_16px_36px_rgba(47,35,20,0.15)]"
     >
       <Image src={category.image || "/jewellery-placeholder.svg"} alt={`${category.name} jewellery collection`} fill sizes="(max-width: 640px) 50vw, 25vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
 
@@ -44,7 +44,7 @@ export function CategorySection({ categories }: CategorySectionProps) {
           <span className="inline-block text-[10px] tracking-[0.3em] uppercase text-gold font-medium mb-3">
             Collections
           </span>
-          <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-bold text-dark mb-3">
+          <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-medium tracking-[-0.025em] text-dark mb-3">
             Shop by Category
           </h2>
           <p className="text-sm sm:text-base text-muted max-w-xl mx-auto leading-relaxed">

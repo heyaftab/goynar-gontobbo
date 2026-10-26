@@ -6,8 +6,10 @@ import { TrustSection } from "@/components/TrustSection";
 import { VirtualStylist } from "@/components/VirtualStylist";
 import { getCategories, getProducts } from "@/data/catalog-api";
 import { HomepageMotion } from "@/components/HomepageMotion";
+import type { Metadata } from "next";
 
 export const revalidate = 60;
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function Home() {
   const [categories, newArrivals, bestSellers] = await Promise.all([

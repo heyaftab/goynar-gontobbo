@@ -3,7 +3,7 @@ import { getCategories } from "@/data/catalog-api";
 import type { Metadata } from "next";
 
 export const revalidate = 60;
-export const metadata: Metadata = { title: "Jewellery Categories", description: "Browse Goynar Gontobbo jewellery by category, including earrings, rings, bangles, necklaces, and more." };
+export const metadata: Metadata = { title: "Jewellery Categories", description: "Browse Goynar Gontobbo jewellery by category, including earrings, rings, bangles, necklaces, and more.", alternates: { canonical: "/categories" } };
 
 export default async function CategoriesPage() {
   const categories = await getCategories();

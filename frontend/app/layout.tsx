@@ -27,7 +27,6 @@ export const metadata: Metadata = {
   description:
     "Discover exquisite Bangladeshi jewellery crafted with elegance and tradition. Explore our collection of earrings, bangles, necklaces, and more at Goynar Gontobbo.",
   metadataBase: new URL((process.env.NEXT_PUBLIC_STOREFRONT_URL || "https://goynargontobbo.com").replace(/\/$/, "")),
-  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName,

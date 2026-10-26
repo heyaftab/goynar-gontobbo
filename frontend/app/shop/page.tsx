@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Shop",
   description:
     "Browse the complete collection of Bangladeshi jewellery at Goynar Gontobbo. Find earrings, bangles, necklaces, rings, and more.",
+  alternates: { canonical: "/shop" },
 };
 
 export default async function ShopPage() {

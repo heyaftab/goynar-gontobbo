@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { InfoPage } from "@/components/InfoPage";
 
-export const metadata: Metadata = { title: "Our Story", description: "Discover the inspiration behind Goynar Gontobbo and our appreciation for the details of Bangladeshi jewellery." };
+export const metadata: Metadata = { title: "Our Story", description: "Discover the inspiration behind Goynar Gontobbo and our appreciation for the details of Bangladeshi jewellery.", alternates: { canonical: "/story" } };
 
 export default function StoryPage() {
   return <InfoPage eyebrow="Our Story" title="Inspired by heritage, made for today" intro="Goynar Gontobbo began with a simple idea: make the beauty of Bangladeshi jewellery craftsmanship easy to discover and enjoy." >

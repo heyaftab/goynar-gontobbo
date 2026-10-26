@@ -43,14 +43,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     image: product.images.map((image) => image.startsWith("/") ? absoluteUrl(image) : image),
     sku: product.id,
     category: product.category,
-    offers: {
-      "@type": "Offer",
-      url: absoluteUrl(`/products/${product.slug}`),
-      priceCurrency: "BDT",
-      price: product.price,
-      availability: `https://schema.org/${product.inStock ? "InStock" : "OutOfStock"}`,
-      itemCondition: "https://schema.org/NewCondition",
-    },
   };
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }} />

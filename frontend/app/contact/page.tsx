@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { InfoPage } from "@/components/InfoPage";
 
-export const metadata: Metadata = { title: "Contact Us", description: "Find support information and updates about the Goynar Gontobbo jewellery storefront preview." };
+export const metadata: Metadata = { title: "Contact Us", description: "Find support information and updates about the Goynar Gontobbo jewellery storefront preview.", alternates: { canonical: "/contact" } };
 
 export default function ContactPage() {
   return <InfoPage eyebrow="Customer Service" title="Contact us" intro="We’re here to help with questions about the collection and this preview store." >

@@ -9,7 +9,7 @@ interface CredentialResponse {
 
 interface GoogleIdentityApi {
   initialize: (options: { client_id: string; callback: (response: CredentialResponse) => void }) => void;
-  renderButton: (element: HTMLElement, options: { type: "standard"; theme: "outline"; size: "large"; text: "continue_with"; shape: "rectangular"; width: number }) => void;
+  renderButton: (element: HTMLElement, options: { type: "standard"; theme: "filled_blue"; size: "large"; text: "continue_with"; shape: "pill"; logo_alignment: "left"; locale: "en"; width: number }) => void;
 }
 
 declare global {
@@ -57,10 +57,12 @@ export function GoogleAutofillButton({ purpose = "autofill", onAutofill, onError
     buttonContainer.replaceChildren();
     googleId.renderButton(buttonContainer, {
       type: "standard",
-      theme: "outline",
+      theme: "filled_blue",
       size: "large",
       text: "continue_with",
-      shape: "rectangular",
+      shape: "pill",
+      logo_alignment: "left",
+      locale: "en",
       width: Math.min(420, Math.floor(buttonContainer.getBoundingClientRect().width)),
     });
   }, [clientId, onAutofill, onError, purpose, scriptLoaded]);

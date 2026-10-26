@@ -4,6 +4,7 @@ import { InfoPage } from "@/components/InfoPage";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description: "Terms for using the Goynar Gontobbo preview storefront.",
+  robots: { index: false, follow: true },
 };
 
 export default function TermsPage() {

@@ -4,6 +4,7 @@ import { InfoPage } from "@/components/InfoPage";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "How the Goynar Gontobbo preview storefront handles browser and sign-in data.",
+  robots: { index: false, follow: true },
 };
 
 export default function PrivacyPage() {

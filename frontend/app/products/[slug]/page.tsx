@@ -3,14 +3,57 @@ import { notFound } from "next/navigation";
 import { getProduct, getProducts } from "@/data/catalog-api";
 import { AddToCartButton } from "@/components/ProductActions";
 import { ProductGallery } from "@/components/ProductGallery";
+import type { Metadata } from "next";
+import { absoluteUrl, productDescription } from "@/lib/seo";
 
 export const revalidate = 60;
 
 export async function generateStaticParams() { return (await getProducts()).map(({ slug }) => ({ slug })); }
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProduct(slug);
+  if (!product) return { title: "Product not found", robots: { index: false, follow: false } };
+  const description = productDescription(product.description, product.name);
+  const image = product.images[0];
+  return {
+    title: product.name,
+    description,
+    alternates: { canonical: `/products/${product.slug}` },
+    openGraph: {
+      type: "website",
+      title: `${product.name} | Goynar Gontobbo`,
+      description,
+      url: absoluteUrl(`/products/${product.slug}`),
+      images: image ? [{ url: image, alt: product.name }] : undefined,
+    },
+    twitter: { card: "summary_large_image", title: product.name, description, images: image ? [image] : undefined },
+  };
+}
+
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await getProduct(slug);
   if (!product) notFound();
-  return <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid md:grid-cols-2 gap-10 items-center"><ProductGallery images={product.images} name={product.name} /><div><Link href={`/categories/${product.categorySlug}`} className="text-sm text-gold">{product.category}</Link><h1 className="font-heading text-3xl sm:text-4xl font-bold text-dark mt-3">{product.name}</h1><p className="text-2xl mt-5">{product.currency}{product.price.toLocaleString()} {product.originalPrice && <del className="ml-2 text-base text-muted">{product.currency}{product.originalPrice.toLocaleString()}</del>}</p><p className="text-muted leading-relaxed mt-6">{product.description ?? "A thoughtfully designed jewellery piece from our collection."}</p><p className="text-sm text-muted mt-4">{product.inStock ? "In stock" : "Currently out of stock"}</p><AddToCartButton product={product} /></div></section>;
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: productDescription(product.description, product.name),
+    image: product.images.map((image) => image.startsWith("/") ? absoluteUrl(image) : image),
+    sku: product.id,
+    category: product.category,
+    offers: {
+      "@type": "Offer",
+      url: absoluteUrl(`/products/${product.slug}`),
+      priceCurrency: "BDT",
+      price: product.price,
+      availability: `https://schema.org/${product.inStock ? "InStock" : "OutOfStock"}`,
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  };
+  return <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }} />
+    <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid md:grid-cols-2 gap-10 items-center"><ProductGallery images={product.images} name={product.name} /><div><Link href={`/categories/${product.categorySlug}`} className="text-sm text-gold">{product.category}</Link><h1 className="font-heading text-3xl sm:text-4xl font-bold text-dark mt-3">{product.name}</h1><p className="text-2xl mt-5">{product.currency}{product.price.toLocaleString()} {product.originalPrice && <del className="ml-2 text-base text-muted">{product.currency}{product.originalPrice.toLocaleString()}</del>}</p><p className="text-muted leading-relaxed mt-6">{product.description ?? "A thoughtfully designed jewellery piece from our collection."}</p><p className="text-sm text-muted mt-4">{product.inStock ? "In stock" : "Currently out of stock"}</p><AddToCartButton product={product} /></div></section>
+  </>;
 }

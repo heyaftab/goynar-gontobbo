@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { InfoPage } from "@/components/InfoPage";
 
-export const metadata: Metadata = { title: "Shipping Information" };
+export const metadata: Metadata = { title: "Shipping Information", description: "Learn about planned delivery coverage and shipping information for Goynar Gontobbo in Bangladesh." };
 
 export default function ShippingPage() {
   return <InfoPage eyebrow="Customer Service" title="Shipping information" intro="We plan to offer delivery across Bangladesh when online ordering launches." >

@@ -1,5 +1,8 @@
 import { SearchExperience } from "@/components/SearchExperience";
 import { getProducts } from "@/data/catalog-api";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Search", robots: { index: false, follow: false } };
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string | string[] }> }) {
   const queryParam = (await searchParams).q;

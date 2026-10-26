@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { InfoPage } from "@/components/InfoPage";
 
-export const metadata: Metadata = { title: "Size Guide" };
+export const metadata: Metadata = { title: "Size Guide", description: "Practical starting points for measuring ring size, bangle fit, and necklace length." };
 
 export default function SizeGuidePage() {
   return <InfoPage eyebrow="Customer Service" title="Jewellery size guide" intro="Use these simple measuring tips as a starting point. Product-specific sizing will be added as confirmed details become available." >

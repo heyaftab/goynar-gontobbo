@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { InfoPage } from "@/components/InfoPage";
 
-export const metadata: Metadata = { title: "FAQs" };
+export const metadata: Metadata = { title: "FAQs", description: "Answers about browsing the Goynar Gontobbo preview, sample jewellery listings, cart, wishlist, and ordering availability." };
 
 export default function FAQPage() {
   return <InfoPage eyebrow="Customer Service" title="Frequently asked questions" intro="A few quick answers about using the Goynar Gontobbo preview." >

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { InfoPage } from "@/components/InfoPage";
 
-export const metadata: Metadata = { title: "Returns & Exchanges" };
+export const metadata: Metadata = { title: "Returns & Exchanges", description: "Read the current returns and exchanges information for the Goynar Gontobbo storefront preview." };
 
 export default function ReturnsPage() {
   return <InfoPage eyebrow="Customer Service" title="Returns & exchanges" intro="Clear return terms will be available before the store begins accepting orders." >

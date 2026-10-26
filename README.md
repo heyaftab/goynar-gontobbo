@@ -1,12 +1,6 @@
-<div align="center">
-
-<br />
-
 # 💎 Goynar Gontobbo
 
-### *Handcrafted Bangladeshi jewellery, beautifully presented.*
-
-<br />
+Handcrafted Bangladeshi jewellery, beautifully presented.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -19,8 +13,6 @@
 ![Vercel](https://img.shields.io/badge/Vercel-frontend-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![Render](https://img.shields.io/badge/Render-API-46E3B7?style=for-the-badge&logo=render&logoColor=black)
 
-<br />
-
 [✨ Features](#-features) •
 [🧰 Tech Stack](#-tech-stack) •
 [🗂 Structure](#-project-structure) •
@@ -29,10 +21,6 @@
 [☁️ Deploy](#️-deployment) •
 [🗺 Roadmap](#-roadmap)
 
-<br />
-
-</div>
-
 ---
 
 ## 🌸 About
@@ -40,7 +28,7 @@
 **Goynar Gontobbo** is a full-stack jewellery storefront for showcasing handcrafted Bangladeshi jewellery. It pairs a responsive, customer-facing catalog with a Laravel backend foundation for managing **products, categories, materials, purities, images, and variants**.
 
 > [!NOTE]
-> **Project status:** The storefront reads the Laravel catalog API when configured and falls back to local mock catalog data when the API is unavailable. Checkout, customer accounts, and administration are **not implemented yet**.
+> **Project status:** The storefront reads the Laravel catalog API when configured and falls back to local mock catalog data when the API is unavailable. Checkout, persisted customer accounts, and server-side administration are **not implemented yet**. Local role previews are for demonstration only.
 
 ```mermaid
 flowchart LR
@@ -63,6 +51,7 @@ flowchart LR
 | 🗄 | Product-oriented schema: categories, materials, purities, products, product images, and variants |
 | 🔐 | Laravel-ready support for users, database-backed sessions, cache, and queues |
 | 🔁 | Graceful fallback to mock data when the API is unavailable |
+| 🔎 | Search-friendly page metadata, canonical URLs, robots rules, and an XML sitemap |
 
 ---
 
@@ -139,7 +128,7 @@ npm install
 npm run dev
 ```
 
-> 🌐 Open **http://localhost:3000** in your browser.
+> 🌐 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### 3️⃣ Run both together
 
@@ -195,10 +184,7 @@ LARAVEL_API_URL=http://127.0.0.1:8000
 
 The server-rendered catalog will then read from Laravel. If the variable is unset or the API is unreachable, the storefront falls back to its local mock catalog. This variable **stays on the server** and is not exposed to visitors' browsers.
 
-<details>
-<summary><b>🔑 Google sign-in &amp; profile autofill</b></summary>
-
-<br />
+### 🔑 Google sign-in & profile autofill
 
 Google profile autofill and sign-in require a **Google Identity Services OAuth web client ID**.
 
@@ -211,8 +197,6 @@ How it works:
 - **Registration** uses the verified name and email to fill the form.
 - **Login** establishes a short-lived, HTTP-only browser session that lasts no longer than the Google ID token (up to one hour). Signing out clears that session.
 - The app does not yet store customer records or orders, and email/password account creation and login are not connected.
-
-</details>
 
 ---
 
@@ -229,10 +213,7 @@ How it works:
 
 ## 🗄 Database Setup
 
-<details open>
-<summary><b>🪶 SQLite (default)</b></summary>
-
-<br />
+### 🪶 SQLite (default)
 
 Laravel defaults to SQLite. Create the local database file, then migrate:
 
@@ -244,12 +225,7 @@ php artisan migrate --seed
 
 Keep `DB_CONNECTION=sqlite` in `backend/.env`. Laravel uses `database/database.sqlite` unless `DB_DATABASE` specifies another path.
 
-</details>
-
-<details>
-<summary><b>🐬 MySQL / MariaDB</b></summary>
-
-<br />
+### 🐬 MySQL / MariaDB
 
 Create a database, then set the following in `backend/.env`:
 
@@ -263,8 +239,6 @@ DB_PASSWORD=your_database_password
 ```
 
 Run `php artisan migrate --seed` after saving to create the catalog tables and load sample catalog data.
-
-</details>
 
 ---
 
@@ -299,6 +273,7 @@ The repository is prepared for **Vercel** (frontend) and **Render** (Laravel API
 
 > [!CAUTION]
 > This setup is for a **free demo only**.
+>
 > - Render's free web service sleeps after 15 minutes without traffic, so the first request after sleeping can take about a minute.
 > - Its free PostgreSQL database expires after 30 days and has **no backups**; do not store important data there. The sample catalog is reseeded when the API starts.
 > - Vercel Hobby is limited to noncommercial personal use.
@@ -314,21 +289,13 @@ The repository is prepared for **Vercel** (frontend) and **Render** (Laravel API
 - [ ] 🛒 Complete checkout, order management, and customer account experiences
 - [ ] 💳 Payment gateway, delivery tracking, and customer notifications
 - [ ] ✅ Test coverage for catalog workflows and CI/CD
-- [ ] 🚀 Optimized product images, accessibility, SEO, observability, and production security controls
+- [ ] 🚀 Optimized product images, accessibility, observability, and production security controls
 
 ---
 
-<div align="center">
+Crafted with ♥ in Bangladesh
 
-<br />
-
-**Crafted with ♥ in Bangladesh**
-
-💍 &nbsp; *Goynar Gontobbo* &nbsp; 💍
-
-<br />
-
-</div>
+💍 Goynar Gontobbo 💍
 
 ## License
 
@@ -338,4 +305,4 @@ This project is proprietary software. The source code is publicly available for 
 
 Commercial use, redistribution, or substantial reuse requires prior written permission from the copyright holder.
 
-See the [LICENSE](https://chatgpt.com/c/LICENSE) file for the complete terms.
+See the [LICENSE](LICENSE) file for the complete terms.

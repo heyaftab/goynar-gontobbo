@@ -12,9 +12,9 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open <http://localhost:3000>. Without an API URL, pages use the local sample catalog. To use the Laravel API, set `LARAVEL_API_URL=http://127.0.0.1:8000` in `.env.local`. The optional `NEXT_PUBLIC_STOREFRONT_URL` should be the absolute public storefront origin when the API is deployed separately and API image URLs are relative paths (for example, `https://store.example.com`).
+Open <http://localhost:3000>. Without an API URL, pages use the local sample catalog. To use the Laravel API, set `LARAVEL_API_URL=http://127.0.0.1:8000` in `.env.local`.
 
-Set `NEXT_PUBLIC_STOREFRONT_URL` to the canonical public site origin in production. It is used for canonical links, social metadata, structured data, the XML sitemap, and robots.txt. The example domain in `.env.example` is a placeholder and must be replaced with the verified production domain before launch.
+Set `NEXT_PUBLIC_STOREFRONT_URL` to the absolute canonical public storefront origin in production. It supplies canonical links, social metadata, structured data, the XML sitemap, and robots.txt; it also ensures relative catalog image URLs resolve to the storefront when the API and frontend use separate hosts. The value in `.env.example` is an example and must be replaced with the actual production domain before deployment.
 
 Google Identity Services is optional. Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_ID` to the same Web application client ID. Register the storefront's exact origin in Google Cloud. Google login is a short-lived browser session only; it does not create or persist a customer record. Registration's Google button fills the form but does not submit or save it.
 

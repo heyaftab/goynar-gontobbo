@@ -14,8 +14,8 @@
   --color-border: #e5dfd8;
   --color-surface: #ffffff;
 
-  --font-heading: var(--font-playfair);
-  --font-body: var(--font-inter);
+  --font-heading: Georgia, "Times New Roman", serif;
+  --font-body: Arial, Helvetica, sans-serif;
 }
 
 html {
@@ -220,7 +220,7 @@ html[data-theme="dark"] .hero-button.bg-gold { color: #19151d; }
   animation: intro-mark-sweep 2s ease-in-out 3.1s both;
 }
 .cinematic-intro__logo { width: 78px; height: 78px; object-fit: contain; margin: 0 auto 1.1rem; filter: drop-shadow(0 0 24px rgba(213,181,118,.42)); }
-.cinematic-intro__name { font-family: var(--font-playfair),serif; font-size: clamp(1.25rem,3.1vw,2.15rem); letter-spacing: .3em; text-shadow: 0 4px 28px rgba(0,0,0,.55); }
+.cinematic-intro__name { font-family: var(--font-heading); font-size: clamp(1.25rem,3.1vw,2.15rem); letter-spacing: .3em; text-shadow: 0 4px 28px rgba(0,0,0,.55); }
 .cinematic-intro__tagline { margin-top: .8rem; color: rgba(247,240,229,.82); font-size: .72rem; letter-spacing: .19em; text-shadow: 0 2px 16px rgba(0,0,0,.7); }
 .cinematic-intro__scroll-hint { position: absolute; z-index: 5; bottom: max(1.65rem,env(safe-area-inset-bottom)); left: 50%; display: grid; gap: .35rem; justify-items: center; color: rgba(255,255,255,.7); font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; transform: translateX(-50%); animation: intro-scroll-hint 1.5s ease-in-out 3.8s infinite; }
 .cinematic-intro__scroll-hint span { font-size: 1rem; line-height: 1; animation: intro-scroll-hint-arrow 1.5s ease-in-out 3.8s infinite; }

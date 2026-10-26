@@ -577,6 +577,65 @@ html[data-theme="dark"] [class~="bg-surface"] {
   background-color: #2d2633 !important;
 }
 
+html[data-theme="dark"] .auth-card {
+  border-color: #65566c;
+  background: #27212e;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, .34);
+}
+
+html[data-theme="dark"] .auth-content {
+  background: linear-gradient(145deg, #302737 0%, #27212e 58%, #231e29 100%);
+}
+
+html[data-theme="dark"] .auth-content input:not([type="checkbox"]):not([type="radio"]) {
+  border-color: #5b4d63;
+  background-color: #211b27;
+  color: #fff8ec;
+}
+
+html[data-theme="dark"] .auth-content input::placeholder {
+  color: #b5a9bb;
+}
+
+html[data-theme="dark"] .auth-content input:hover {
+  border-color: #a17b43;
+}
+
+html[data-theme="dark"] .auth-content input:focus {
+  border-color: #e0bd77;
+  box-shadow: 0 0 0 4px rgba(224, 189, 119, .14);
+}
+
+html[data-theme="dark"] .auth-preview-note {
+  border-color: rgba(224, 189, 119, .32);
+  background: #392f3b;
+  color: #f1e8dc;
+}
+
+html[data-theme="dark"] .auth-preview-note > span {
+  background: #514255;
+  color: #f0cf83;
+}
+
+html[data-theme="dark"] .auth-google-panel {
+  border-color: #5b4d63;
+  background: #342b39;
+}
+
+html[data-theme="dark"] .auth-google-panel > p {
+  color: #d5c9d8;
+}
+
+html[data-theme="dark"] .auth-demo-account {
+  border-color: #55485d;
+  background: #332b38;
+}
+
+html[data-theme="dark"] .auth-demo-account:hover {
+  border-color: #b28a45;
+  background: #403446;
+}
+
 html[data-theme="dark"] .product-card-action:not(:disabled),
 html[data-theme="dark"] .product-card-action:not(:disabled):hover {
   border-color: #b58c43 !important;

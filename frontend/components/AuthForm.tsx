@@ -44,7 +44,7 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <section className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-      <div className="grid min-w-0 overflow-hidden rounded-[1.75rem] border border-border bg-surface shadow-[0_24px_80px_rgba(46,31,20,0.12)] lg:min-h-[700px] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className="auth-card grid min-w-0 overflow-hidden rounded-[1.75rem] border border-border bg-surface shadow-[0_24px_80px_rgba(46,31,20,0.12)] lg:min-h-[700px] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
         <aside className="relative min-w-0 min-h-[250px] overflow-hidden bg-[#43252a] sm:min-h-[310px] lg:min-h-full" aria-label="Goynar Gontobbo jewellery">
           <Image
             src="/assets/WhatsApp Image 2026-10-09 at 16.20.42.jpeg"
@@ -64,7 +64,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           </div>
         </aside>
 
-        <div className="flex min-w-0 flex-col justify-center px-5 py-8 sm:px-10 sm:py-10 lg:px-8 lg:py-12 xl:px-12">
+        <div className="auth-content flex min-w-0 flex-col justify-center px-5 py-8 sm:px-10 sm:py-10 lg:px-8 lg:py-12 xl:px-12">
           <div className="mx-auto w-full min-w-0 max-w-xl">
             <div className="mb-7 flex items-center gap-3">
               <span className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/20 bg-cream/70">
@@ -83,7 +83,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             </p>
 
             {!isRegister && (
-              <div className="mb-6 flex gap-3 rounded-2xl border border-[#e7d5ad] bg-[#fbf6eb] p-4 text-sm leading-5 text-charcoal">
+              <div className="auth-preview-note mb-6 flex gap-3 rounded-2xl border border-[#e7d5ad] bg-[#fbf6eb] p-4 text-sm leading-5 text-charcoal">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-gold-dark" aria-hidden="true">i</span>
                 <p><strong className="font-semibold">Preview mode.</strong> Demo accounts and edits stay in this browser. Role access is for demonstration and isn’t production authentication.</p>
               </div>
@@ -117,7 +117,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             </form>
 
             {isRegister && (
-              <div className="mt-5 rounded-2xl border border-border bg-ivory/50 p-4 sm:p-5">
+              <div className="auth-google-panel mt-5 rounded-2xl border border-border bg-ivory/50 p-4 sm:p-5">
                 <GoogleAutofillButton purpose="autofill" onAutofill={(profile) => { setName(profile.name); setEmail(profile.email); setMessage("Google filled the form. This preview will not save it as a customer account."); }} onError={setMessage} />
                 <p className="mt-3 text-center text-xs leading-5 text-muted">Google fills your profile details here; registration is not persisted.</p>
               </div>
@@ -128,7 +128,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                 <div className="mb-4 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted sm:text-xs"><span className="h-px flex-1 bg-border" />Explore a demo role<span className="h-px flex-1 bg-border" /></div>
                 <div className="grid gap-2.5 sm:grid-cols-2">
                   {demoAccounts.map((account) => (
-                    <button key={account.role} type="button" onClick={() => demoLogin(account.email)} className="group flex min-w-0 items-center gap-3 rounded-xl border border-border bg-white p-3 text-left transition hover:-translate-y-0.5 hover:border-gold/60 hover:bg-cream/35 hover:shadow-[0_8px_20px_rgba(46,31,20,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
+                    <button key={account.role} type="button" onClick={() => demoLogin(account.email)} className="auth-demo-account group flex min-w-0 items-center gap-3 rounded-xl border border-border bg-white p-3 text-left transition hover:-translate-y-0.5 hover:border-gold/60 hover:bg-cream/35 hover:shadow-[0_8px_20px_rgba(46,31,20,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream font-heading text-sm text-gold-dark transition group-hover:bg-[#f0e2c6]">{account.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("")}</span>
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-semibold text-dark">{roleLabels[account.role]}</span>

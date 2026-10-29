@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { isAllowedOrigin } from "@/lib/auth/origin";
 import { getLaravelApiUrl } from "@/lib/laravel-api-url";
 
-type AuthAction = "register" | "login" | "google" | "me" | "profile" | "logout";
+type AuthAction = "register" | "login" | "google" | "me" | "profile" | "password" | "logout" | "forgot-password" | "reset-password";
 
 const methods: Record<AuthAction, "GET" | "POST" | "PUT"> = {
   register: "POST",
@@ -11,7 +11,10 @@ const methods: Record<AuthAction, "GET" | "POST" | "PUT"> = {
   google: "POST",
   me: "GET",
   profile: "PUT",
+  password: "PUT",
   logout: "POST",
+  "forgot-password": "POST",
+  "reset-password": "POST",
 };
 
 export async function proxyAuthRequest(request: NextRequest, action: AuthAction) {

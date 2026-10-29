@@ -230,6 +230,7 @@ Copy `backend/.env.example` to `backend/.env`.
 | `APP_ENV` | Runtime environment | `local` |
 | `APP_KEY` | Laravel encryption key | Generated with `php artisan key:generate` |
 | `APP_URL` | Public backend URL | `http://127.0.0.1:8000` |
+| `FRONTEND_URL` | Storefront URL used in password reset emails | `http://localhost:3000` |
 | `DB_CONNECTION` | Database driver | `sqlite` or `mysql` |
 | `DB_DATABASE` | SQLite file path or database name | `database.sqlite` or `goynar_gontobbo` |
 | `DB_HOST`, `DB_PORT` | Database host and port | `127.0.0.1`, `3306` for MySQL |

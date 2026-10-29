@@ -1,6 +1,6 @@
 # Goynar Gontobbo storefront
 
-The customer-facing storefront is built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4. It provides product discovery, category and product pages, a browser-local cart and wishlist, and Laravel-backed email/password customer registration and login. Checkout and server-side administration are not implemented.
+The customer-facing storefront is built with Next.js 16, React 19, TypeScript, and Tailwind CSS 4. It provides product discovery, category and product pages, a browser-local cart and wishlist, and Laravel-backed email/password registration, login, password reset, and password change. Checkout and server-side administration are not implemented.
 
 ## Local development
 
@@ -22,7 +22,7 @@ Google Identity Services is optional. Set `NEXT_PUBLIC_GOOGLE_CLIENT_ID` and `GO
 
 The sign-in page offers local demo accounts for system admin, admin, moderator, marketing, and customer roles. Changes to profile details, preferences, private notes, role assignments, and the fallback catalog are stored in the current browser's local storage. They are not sent to the Laravel API and do not sync between browsers. Role checks are UI-only and must not be used as production access control. There is no persisted order system; customer order history remains empty until checkout and backend order management are implemented.
 
-Each demo role receives a local getting-started notification. System admins can compose a notification for a role (for example `moderator` or `system admin`) or one exact demo email. Recipients see it in Notifications and guidance and can mark it read. This preview does not send email, push notifications, or cross-device updates. Newly registered customer credentials are stored by Laravel; browser workspace preferences remain local.
+Each demo role receives a local getting-started notification. System admins can compose a notification for a role (for example `moderator` or `system admin`) or one exact demo email. Recipients see it in Notifications and guidance and can mark it read. These demo notices do not send email, push notifications, or cross-device updates. Password reset emails use the Laravel mail configuration; configure SMTP in the backend hosting environment for production delivery. Newly registered customer credentials are stored by Laravel; browser workspace preferences remain local.
 
 ## Commands
 

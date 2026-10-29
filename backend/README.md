@@ -1,6 +1,6 @@
 # Goynar Gontobbo catalog API
 
-This Laravel 12 application provides the store's public, read-only catalog API. The customer storefront lives in `../frontend`. Customer accounts, checkout, and administration are not implemented by this service.
+This Laravel 12 application provides the store's public catalog API and email/password customer account endpoints. The customer storefront lives in `../frontend`. Checkout and administration are not implemented by this service.
 
 ## Requirements
 
@@ -40,6 +40,12 @@ curl "http://127.0.0.1:8000/api/v1/products?category=rings&per_page=12"
 ```
 
 `/up` is the framework health endpoint used by the Render deployment.
+
+## Password recovery and email delivery
+
+Password reset requests use Laravel's password broker and send a single-use link to the account email. The link opens the storefront's `/reset-password` page; tokens expire after 60 minutes and reset requests are rate limited. The forgot-password response does not reveal whether an email is registered.
+
+For local development, the default `MAIL_MAILER=log` writes reset emails to the Laravel log instead of delivering them. For production, configure a trusted SMTP provider in the Render service environment: `MAIL_MAILER=smtp`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_SCHEME`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`, and `MAIL_FROM_NAME`. Keep credentials in Render environment variables, never in the repository. `FRONTEND_URL` must point to the deployed storefront so reset links return to the right site.
 
 ## Commands
 

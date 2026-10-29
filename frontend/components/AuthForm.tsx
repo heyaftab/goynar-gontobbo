@@ -199,6 +199,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                 <p className="mt-2 text-xs text-muted">
                   {isRegister ? "Saved securely to your account database." : showDemoControls ? "Enter your password for your saved account, or select a demo role below." : "Enter your account password."}
                 </p>
+                {!isRegister && <Link href={email.trim() ? `/forgot-password?email=${encodeURIComponent(email.trim())}` : "/forgot-password"} className="mt-2 inline-block text-xs font-semibold text-gold-dark underline underline-offset-4 hover:text-gold">Forgot password?</Link>}
               </div>
               <button type="submit" disabled={submitting} className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#38272a] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(56,39,42,0.16)] transition hover:-translate-y-0.5 hover:bg-[#513339] hover:shadow-[0_12px_24px_rgba(56,39,42,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 disabled:opacity-60">
                 {submitting ? (isRegister ? "Creating account…" : "Signing in…") : (isRegister ? "Create account" : "Continue with email")}

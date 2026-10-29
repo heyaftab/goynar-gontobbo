@@ -4,7 +4,11 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
@@ -96,6 +100,60 @@ Route::prefix('v1')->group(function (): void {
             ]);
         });
 
+        Route::post('/forgot-password', function (Request $request) {
+            $data = $request->validate([
+                'email' => ['required', 'email', 'max:255'],
+            ]);
+
+            if (app()->isProduction() && in_array(config('mail.default'), ['log', 'array'], true)) {
+                return response()->json([
+                    'message' => 'Password recovery is temporarily unavailable. Please try again later.',
+                ], 503);
+            }
+
+            try {
+                Password::sendResetLink(['email' => strtolower($data['email'])]);
+            } catch (\Throwable $exception) {
+                // Keep email delivery failures from revealing whether the address exists.
+                Log::error('Password reset email delivery failed.', ['exception' => $exception::class]);
+            }
+
+            // Keep the response identical for known and unknown addresses.
+            return response()->json([
+                'message' => 'If an account exists for that email, password reset instructions will be sent.',
+            ]);
+        })->middleware('throttle:5,1');
+
+        Route::post('/reset-password', function (Request $request) {
+            $data = $request->validate([
+                'email' => ['required', 'email', 'max:255'],
+                'token' => ['required', 'string'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
+
+            $status = Password::reset(
+                [
+                    'email' => strtolower($data['email']),
+                    'token' => $data['token'],
+                    'password' => $data['password'],
+                    'password_confirmation' => $request->input('password_confirmation'),
+                ],
+                function (User $user, string $password): void {
+                    $user->forceFill(['password' => Hash::make($password)])->save();
+                    $user->tokens()->delete();
+                    Event::dispatch(new PasswordReset($user));
+                },
+            );
+
+            if ($status !== Password::PASSWORD_RESET) {
+                return response()->json([
+                    'message' => 'This reset link is invalid or expired. Request a new one and try again.',
+                ], 422);
+            }
+
+            return response()->json(['message' => 'Password reset successfully. You can now sign in.']);
+        })->middleware('throttle:5,1');
+
         Route::post('/google', function (Request $request) {
             $data = $request->validate([
                 'email' => ['required', 'string', 'email'],
@@ -160,6 +218,30 @@ Route::prefix('v1')->group(function (): void {
                     'message' => 'Profile updated successfully.',
                 ]);
             });
+
+            Route::put('/password', function (Request $request) {
+                $data = $request->validate([
+                    'current_password' => ['required', 'string'],
+                    'password' => ['required', 'string', 'min:8', 'confirmed', 'different:current_password'],
+                ]);
+
+                $user = $request->user();
+                if (! $user->password || ! Hash::check($data['current_password'], $user->password)) {
+                    return response()->json([
+                        'message' => 'The current password is incorrect.',
+                        'errors' => ['current_password' => ['The current password is incorrect.']],
+                    ], 422);
+                }
+
+                $user->forceFill(['password' => Hash::make($data['password'])])->save();
+
+                $currentToken = $request->attributes->get('current_token');
+                if ($currentToken) {
+                    $user->tokens()->where('id', '<>', $currentToken->id)->delete();
+                }
+
+                return response()->json(['message' => 'Password changed successfully.']);
+            })->middleware('throttle:5,1');
 
             Route::post('/logout', function (Request $request) {
                 $currentToken = $request->attributes->get('current_token');

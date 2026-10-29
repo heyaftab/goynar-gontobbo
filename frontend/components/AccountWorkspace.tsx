@@ -7,7 +7,7 @@ import type { Product } from "@/types";
 import { categories } from "@/data/mock-categories";
 import { roleLabels, type DemoRole } from "@/lib/demo-accounts";
 import { defaultProfile, defaultUserPreferences, hasRole, loadWorkspace, saveWorkspace, type DemoNotification, type DemoWorkspace, type PrivateNote } from "@/lib/demo-data";
-import { apiGetProfile, apiLogout, apiUpdateProfile, getStoredToken } from "@/lib/auth/api";
+import { apiChangePassword, apiGetProfile, apiLogout, apiUpdateProfile, getStoredToken } from "@/lib/auth/api";
 
 const panel = "rounded-2xl border border-border bg-surface p-5 shadow-sm sm:p-6";
 const input = "w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-charcoal outline-none focus:border-gold focus:ring-2 focus:ring-gold/15";
@@ -211,6 +211,8 @@ export function AccountWorkspace() {
     )}
     {status && <p role="status" className={`mb-5 rounded-lg border px-4 py-3 text-sm ${status === "Account created successfully." ? "border-emerald-500/30 bg-emerald-50 text-emerald-900" : "border-border bg-white text-charcoal"}`}>{status}</p>}
 
+    {tab === "profile" && getStoredToken() && <div className={`${panel} mb-6`}><h2 className="font-heading text-2xl text-dark">Change password</h2><p className="mb-5 mt-1 text-sm text-muted">Confirm your current password before setting a new one.</p><PasswordChangeForm /></div>}
+
     {tab === "profile" && <div className={panel}><h2 className="font-heading text-2xl text-dark">Profile</h2><p className="mb-6 mt-1 text-sm text-muted">Your details are saved locally for the selected demo account.</p><form className="grid gap-4 sm:grid-cols-2" onSubmit={updateProfile}><label className="text-sm text-charcoal">Display name<input className={`${input} mt-2`} name="name" defaultValue={profile?.name} required /></label><label className="text-sm text-charcoal">Email<input className={`${input} mt-2 bg-cream`} value={user.email} readOnly /></label><label className="text-sm text-charcoal">Phone<input className={`${input} mt-2`} name="phone" defaultValue={profile?.phone} placeholder="Optional" /></label><label className="text-sm text-charcoal sm:col-span-2">Delivery address for your preview profile<textarea className={`${input} mt-2 min-h-24`} name="address" defaultValue={profile?.address} placeholder="Optional; no order will be placed" /></label><div className="sm:col-span-2"><button className="rounded-lg bg-charcoal px-5 py-2.5 text-sm font-semibold text-white hover:bg-gold-dark">Save profile</button></div></form></div>}
 
     {tab === "settings" && <div className={panel}><h2 className="font-heading text-2xl text-dark">Saved preferences</h2><p className="mb-6 mt-1 text-sm text-muted">Choose the styles and collections you want this demo account to remember.</p><form className="space-y-6" onSubmit={updatePreferences}><fieldset><legend className="mb-3 text-sm font-medium text-charcoal">Favourite categories</legend><div className="grid gap-2 sm:grid-cols-4">{categories.map((category) => <label key={category.slug} className="flex items-center gap-2 rounded-lg border border-border bg-white px-3 py-2 text-sm"><input type="checkbox" name="category" value={category.name} defaultChecked={preferences?.preferredCategories.includes(category.name)} className="accent-amber-700" />{category.name}</label>)}</div></fieldset><div className="grid gap-4 sm:grid-cols-2"><label className="text-sm text-charcoal">Preferred style<select name="style" className={`${input} mt-2`} defaultValue={preferences?.style}><option value="">Choose one</option>{["Traditional", "Contemporary", "Bridal", "Everyday", "Minimal"].map((value) => <option key={value}>{value}</option>)}</select></label><label className="text-sm text-charcoal">Preferred material<select name="material" className={`${input} mt-2`} defaultValue={preferences?.material}><option value="">Choose one</option>{["Gold plated", "Silver plated", "Pearl", "Kundan", "Brass"].map((value) => <option key={value}>{value}</option>)}</select></label></div><label className="flex items-start gap-3 text-sm text-charcoal"><input name="notify" type="checkbox" defaultChecked={preferences?.notifyNewCollections} className="mt-1 accent-amber-700" /><span>Remember that I am interested in new collection announcements <span className="block text-xs text-muted">This demo does not send emails or notifications.</span></span></label><button className="rounded-lg bg-charcoal px-5 py-2.5 text-sm font-semibold text-white hover:bg-gold-dark">Save preferences</button></form></div>}
@@ -255,6 +257,45 @@ function safeCount(key: string): number {
     const value = JSON.parse(localStorage.getItem(key) ?? "[]") as unknown[];
     return Array.isArray(value) ? value.length : 0;
   } catch { return 0; }
+}
+
+function PasswordChangeForm() {
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const values = new FormData(form);
+    setSubmitting(true);
+    setMessage("");
+    setError("");
+    try {
+      const result = await apiChangePassword({
+        current_password: String(values.get("current_password") ?? ""),
+        password: String(values.get("password") ?? ""),
+        password_confirmation: String(values.get("password_confirmation") ?? ""),
+      });
+      setMessage(result.message);
+      form.reset();
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Could not change your password. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return <>
+    <form className="grid gap-4 sm:grid-cols-2" onSubmit={submit}>
+      <label className="text-sm text-charcoal sm:col-span-2">Current password<input className={`${input} mt-2`} type="password" name="current_password" autoComplete="current-password" required /></label>
+      <label className="text-sm text-charcoal">New password<input className={`${input} mt-2`} type="password" name="password" autoComplete="new-password" minLength={8} required /></label>
+      <label className="text-sm text-charcoal">Confirm new password<input className={`${input} mt-2`} type="password" name="password_confirmation" autoComplete="new-password" minLength={8} required /></label>
+      <div className="sm:col-span-2"><button className="rounded-lg bg-charcoal px-5 py-2.5 text-sm font-semibold text-white hover:bg-gold-dark disabled:opacity-60" disabled={submitting}>{submitting ? "Updating…" : "Change password"}</button></div>
+    </form>
+    {message && <p role="status" className="mt-4 rounded-lg border border-emerald-500/30 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">{message}</p>}
+    {error && <p role="alert" className="mt-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">{error}</p>}
+  </>;
 }
 
 function canReplyToPrivateNotes(role: DemoRole): boolean {

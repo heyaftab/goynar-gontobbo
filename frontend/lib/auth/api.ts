@@ -82,6 +82,57 @@ export async function apiLogin(data: { email: string; password: string }): Promi
   return payload;
 }
 
+export async function apiRequestPasswordReset(email: string): Promise<{ message: string }> {
+  const response = await fetch("/api/auth/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ email }),
+  });
+
+  const payload = await response.json() as { message?: string; errors?: Record<string, string[]> };
+  if (!response.ok) {
+    const firstError = payload.errors ? Object.values(payload.errors).flat()[0] : payload.message;
+    throw new Error(firstError || "Could not request a password reset.");
+  }
+
+  return { message: payload.message || "If an account exists for that email, password reset instructions will be sent." };
+}
+
+export async function apiResetPassword(data: { email: string; token: string; password: string; password_confirmation: string }): Promise<{ message: string }> {
+  const response = await fetch("/api/auth/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  const payload = await response.json() as { message?: string; errors?: Record<string, string[]> };
+  if (!response.ok) {
+    const firstError = payload.errors ? Object.values(payload.errors).flat()[0] : payload.message;
+    throw new Error(firstError || "Could not reset your password.");
+  }
+
+  return { message: payload.message || "Password reset successfully. You can now sign in." };
+}
+
+export async function apiChangePassword(data: { current_password: string; password: string; password_confirmation: string }): Promise<{ message: string }> {
+  const token = getStoredToken();
+  if (!token) throw new Error("Please sign in again to change your password.");
+
+  const response = await fetch("/api/auth/password", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, Accept: "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  const payload = await response.json() as { message?: string; errors?: Record<string, string[]> };
+  if (!response.ok) {
+    const firstError = payload.errors ? Object.values(payload.errors).flat()[0] : payload.message;
+    throw new Error(firstError || "Could not change your password.");
+  }
+
+  return { message: payload.message || "Password changed successfully." };
+}
+
 export async function apiGoogleSync(data: { email: string; name: string; google_id?: string; avatar?: string }): Promise<AuthResponse> {
   const response = await fetch(`${getApiBase()}/google`, {
     method: "POST",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Product } from "@/types";
@@ -11,12 +11,17 @@ import { apiGetProfile, apiLogout, apiUpdateProfile, getStoredToken } from "@/li
 
 const panel = "rounded-2xl border border-border bg-surface p-5 shadow-sm sm:p-6";
 const input = "w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-charcoal outline-none focus:border-gold focus:ring-2 focus:ring-gold/15";
+const subscribeToHydration = () => () => {};
+const getHydrationSnapshot = () => true;
+const getServerHydrationSnapshot = () => false;
 
 export function AccountWorkspace() {
   const router = useRouter();
+  const showPreviewStatus = process.env.NODE_ENV !== "production";
   const [workspace, setWorkspace] = useState<DemoWorkspace>(() => loadWorkspace());
+  const isHydrated = useSyncExternalStore(subscribeToHydration, getHydrationSnapshot, getServerHydrationSnapshot);
   const [tab, setTab] = useState<"overview" | "profile" | "settings">("overview");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("created") === "1" ? "Account created successfully." : "");
   const [noteText, setNoteText] = useState("");
   const [productForm, setProductForm] = useState({ name: "", category: "Earrings", price: "", image: "/assets/products/earring-pearl-drop.jpg" });
   const [collectionName, setCollectionName] = useState("");
@@ -36,8 +41,14 @@ export function AccountWorkspace() {
   const [isDbSynced, setIsDbSynced] = useState(false);
 
   useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("created") === "1") {
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  useEffect(() => {
     async function syncDbUser() {
-      if (!getStoredToken() || !user) return;
+      if (!isHydrated || !getStoredToken() || !user) return;
       try {
         const dbUser = await apiGetProfile();
         if (dbUser) {
@@ -56,7 +67,7 @@ export function AccountWorkspace() {
       }
     }
     syncDbUser();
-  }, [user]);
+  }, [isHydrated, user]);
 
   function commit(next: DemoWorkspace, message?: string) {
     saveWorkspace(next);
@@ -187,20 +198,18 @@ export function AccountWorkspace() {
     return { products: workspace.products.length, collections: workspace.collectionNames.length, notes: Object.values(workspace.notes).reduce((sum, notes) => sum + notes.length, 0), customers: workspace.users.filter((account) => account.role === "customer").length, savedOrders: Object.values(workspace.orders).reduce((sum, ordersForUser) => sum + ordersForUser.length, 0) };
   }, [workspace]);
 
+  if (!isHydrated) return <section className="mx-auto min-h-[24rem] max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8" aria-busy="true" aria-label="Loading account" />;
+
   if (!user) return <section className="mx-auto max-w-3xl px-4 py-16 text-center sm:py-24"><p className="mb-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold-dark">Your account</p><h1 className="font-heading text-4xl text-dark sm:text-5xl">A more personal experience</h1><p className="mx-auto mt-5 max-w-xl text-base leading-7 text-muted">Sign in to save your profile, preferences, cart choices, wishlist, and private notes in this browser.</p><div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row"><Link href="/login" className="rounded-lg bg-charcoal px-7 py-3 text-sm font-semibold text-white transition hover:bg-gold-dark">Sign in</Link><Link href="/register" className="rounded-lg border border-charcoal px-7 py-3 text-sm font-semibold text-charcoal transition hover:border-gold-dark hover:text-gold-dark">Create account</Link></div></section>;
 
   return <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-    <div className="mb-7 flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-gold-dark">{roleLabels[role]} workspace · local demo</p><h1 className="font-heading text-3xl text-dark sm:text-4xl">Welcome, {profile?.name || user.name}</h1><p className="mt-2 break-all text-sm text-muted">{user.email}</p></div><div className="flex flex-wrap gap-2"><button onClick={() => setTab("overview")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "overview" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Overview</button><button onClick={() => setTab("profile")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "profile" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Profile</button><button onClick={() => setTab("settings")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "settings" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Settings</button><button onClick={signOut} className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-charcoal hover:border-gold">Sign out</button></div></div>
-    {isDbSynced ? (
-      <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-50/70 px-4 py-3 text-xs leading-5 text-emerald-900">
-        ✓ <strong>Connected Account:</strong> Signed in with your persistent database account ({user.email}). Profile changes sync directly to the database.
-      </div>
-    ) : (
+    <div className="mb-7 flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-gold-dark">{roleLabels[role]} workspace{showPreviewStatus ? " · local demo" : ""}</p><h1 className="font-heading text-3xl text-dark sm:text-4xl">Welcome, {profile?.name || user.name}</h1><p className="mt-2 break-all text-sm text-muted">{user.email}</p></div><div className="flex flex-wrap gap-2"><button onClick={() => setTab("overview")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "overview" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Overview</button><button onClick={() => setTab("profile")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "profile" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Profile</button><button onClick={() => setTab("settings")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "settings" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Settings</button><button onClick={signOut} className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-charcoal hover:border-gold">Sign out</button></div></div>
+    {showPreviewStatus && !isDbSynced && (
       <div className="mb-6 rounded-xl border border-gold/30 bg-cream/60 px-4 py-3 text-xs leading-5 text-charcoal">
         Demo workspace: saved data and role changes live in this browser. Register or sign in with Google to sync with your persistent database account.
       </div>
     )}
-    {status && <p role="status" className="mb-5 rounded-lg border border-border bg-white px-4 py-3 text-sm text-charcoal">{status}</p>}
+    {status && <p role="status" className={`mb-5 rounded-lg border px-4 py-3 text-sm ${status === "Account created successfully." ? "border-emerald-500/30 bg-emerald-50 text-emerald-900" : "border-border bg-white text-charcoal"}`}>{status}</p>}
 
     {tab === "profile" && <div className={panel}><h2 className="font-heading text-2xl text-dark">Profile</h2><p className="mb-6 mt-1 text-sm text-muted">Your details are saved locally for the selected demo account.</p><form className="grid gap-4 sm:grid-cols-2" onSubmit={updateProfile}><label className="text-sm text-charcoal">Display name<input className={`${input} mt-2`} name="name" defaultValue={profile?.name} required /></label><label className="text-sm text-charcoal">Email<input className={`${input} mt-2 bg-cream`} value={user.email} readOnly /></label><label className="text-sm text-charcoal">Phone<input className={`${input} mt-2`} name="phone" defaultValue={profile?.phone} placeholder="Optional" /></label><label className="text-sm text-charcoal sm:col-span-2">Delivery address for your preview profile<textarea className={`${input} mt-2 min-h-24`} name="address" defaultValue={profile?.address} placeholder="Optional; no order will be placed" /></label><div className="sm:col-span-2"><button className="rounded-lg bg-charcoal px-5 py-2.5 text-sm font-semibold text-white hover:bg-gold-dark">Save profile</button></div></form></div>}
 

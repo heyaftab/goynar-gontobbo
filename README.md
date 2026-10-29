@@ -49,7 +49,7 @@
 **Goynar Gontobbo** is a full-stack jewellery storefront for showcasing handcrafted Bangladeshi jewellery. It pairs a responsive, customer-facing catalog with a Laravel backend foundation for managing **products, categories, materials, purities, images, and variants**.
 
 > [!NOTE]
-> **Project status:** The storefront reads the Laravel catalog API when configured and falls back to local mock catalog data when the API is unavailable. Checkout, persisted customer accounts, and server-side administration are **not implemented yet**. Local role previews are for demonstration only.
+> **Project status:** The storefront reads the Laravel catalog API when configured and falls back to local mock catalog data when the API is unavailable. Email/password customer registration and login use the Laravel database when configured. Checkout, persisted customer preferences, and server-side administration are **not implemented yet**. Local role previews are for demonstration only.
 
 ### 🧭 How it fits together
 
@@ -260,7 +260,7 @@ Google profile autofill and sign-in require a **Google Identity Services OAuth w
 - The browser displays Google's official account button; the server verifies its signed ID token with Google's public signing keys.
 - **Registration** uses the verified name and email to fill the form.
 - **Login** establishes a short-lived, HTTP-only browser session that lasts no longer than the Google ID token (up to one hour). Signing out clears that session.
-- The app does not yet store customer records or orders, and email/password account creation and login are not connected.
+- Email/password registration and login create and authenticate customer records in the configured Laravel database. Customer preferences and orders are not persisted by the backend yet.
 
 ---
 
@@ -271,7 +271,7 @@ Google profile autofill and sign-in require a **Google Identity Services OAuth w
 - 🛑 Never rotate `APP_KEY` casually: encrypted cookies and stored values may become unreadable unless the old key is retained in `APP_PREVIOUS_KEYS` where supported.
 
 > [!IMPORTANT]
-> The **cart and wishlist** are convenience data stored in browser `localStorage`. They are **not** a secure store for passwords, tokens, payment details, or other secrets. Encrypting data in JavaScript with a key bundled to the same browser would not protect it from the browser's owner or malicious scripts. Authentication and sensitive customer data should be handled by a server-side account system over HTTPS, which is not implemented yet.
+> The **cart and wishlist** are convenience data stored in browser `localStorage`. They are **not** a secure store for passwords, payment details, or other secrets. Encrypting data in JavaScript with a key bundled to the same browser would not protect it from the browser's owner or malicious scripts. Account passwords are hashed by Laravel; authenticated API tokens are stored in the browser for this preview. Deploy account services only over HTTPS and keep production secrets private.
 
 ---
 

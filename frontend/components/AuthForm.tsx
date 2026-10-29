@@ -14,6 +14,7 @@ interface AuthFormProps { mode: "login" | "register"; }
 
 export function AuthForm({ mode }: AuthFormProps) {
   const isRegister = mode === "register";
+  const showDemoControls = process.env.NODE_ENV !== "production";
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState("");
@@ -77,19 +78,10 @@ export function AuthForm({ mode }: AuthFormProps) {
         workspace.users = [...workspace.users.filter((u) => u.email !== res.user.email), newUser];
         workspace.activeUser = newUser;
         saveWorkspace(workspace);
-        router.push("/account");
+        router.push("/account?created=1");
         return;
       } catch (err) {
-        // Fallback to local workspace preview if backend database is offline
-        const workspace = loadWorkspace();
-        const existing = workspace.users.find((u) => u.email === trimmedEmail);
-        const user = existing ?? { name: trimmedName, email: trimmedEmail, role: "customer" as const };
-        if (!existing) {
-          workspace.users = [...workspace.users, user];
-        }
-        workspace.activeUser = user;
-        saveWorkspace(workspace);
-        router.push("/account");
+        setMessage(err instanceof Error ? err.message : "Account creation failed. Please try again.");
         return;
       } finally {
         setSubmitting(false);
@@ -119,9 +111,9 @@ export function AuthForm({ mode }: AuthFormProps) {
     }
 
     // Demo account passwordless fallback
-    const account = demoUserForEmail(trimmedEmail) ?? loadWorkspace().users.find((u) => u.email === trimmedEmail);
+    const account = demoUserForEmail(trimmedEmail);
     if (!account) {
-      setMessage("Account not found. Enter your password or select a demo role below.");
+      setMessage("Enter your password to sign in, or select a demo role below.");
       setSubmitting(false);
       return;
     }
@@ -160,17 +152,17 @@ export function AuthForm({ mode }: AuthFormProps) {
               </span>
               <span>
                 <span className="block font-heading text-lg leading-tight text-dark">Goynar Gontobbo</span>
-                <span className="mt-1 block text-[10px] font-medium uppercase tracking-[0.18em] text-muted">Your personal preview</span>
+                <span className="mt-1 block text-[10px] font-medium uppercase tracking-[0.18em] text-muted">{showDemoControls ? "Your personal preview" : "Your personal account"}</span>
               </span>
             </div>
 
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold-dark">{isRegister ? "A new beginning" : "Welcome back"}</p>
             <h1 className="font-heading text-3xl leading-tight text-dark sm:text-[2.35rem]">{isRegister ? "Create your account" : "Sign in to your account"}</h1>
             <p className="mb-6 mt-3 max-w-lg text-sm leading-6 text-muted">
-              {isRegister ? "Set up a profile preview and explore the experience. Your details won’t be saved as a customer account." : "Enter a demo email or choose a role below to explore your local preview workspace."}
+              {isRegister ? "Create a customer account with your name, email, and password." : showDemoControls ? "Sign in to your customer account, or choose a demo role to explore the local preview." : "Sign in to your customer account."}
             </p>
 
-            {!isRegister && (
+            {!isRegister && showDemoControls && (
               <div className="auth-preview-note mb-6 flex gap-3 rounded-2xl border border-[#e7d5ad] bg-[#fbf6eb] p-4 text-sm leading-5 text-charcoal">
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-gold-dark" aria-hidden="true">i</span>
                 <p><strong className="font-semibold">Preview mode.</strong> Demo accounts and edits stay in this browser. Role access is for demonstration and isn’t production authentication.</p>
@@ -186,7 +178,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               )}
               <div>
                 <label htmlFor="email" className="mb-2 block text-xs font-semibold text-charcoal">Email address</label>
-                <input id="email" name="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required className="w-full rounded-xl border border-border bg-ivory/60 px-4 py-3.5 text-sm text-dark outline-none transition placeholder:text-muted/70 hover:border-gold/50 focus:border-gold focus:ring-4 focus:ring-gold/10" placeholder="customer@goynar.demo" />
+                <input id="email" name="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required className="w-full rounded-xl border border-border bg-ivory/60 px-4 py-3.5 text-sm text-dark outline-none transition placeholder:text-muted/70 hover:border-gold/50 focus:border-gold focus:ring-4 focus:ring-gold/10" placeholder={showDemoControls ? "customer@goynar.demo" : "you@example.com"} />
               </div>
               <div>
                 <label htmlFor="password" className="mb-2 block text-xs font-semibold text-charcoal">Password</label>
@@ -198,14 +190,14 @@ export function AuthForm({ mode }: AuthFormProps) {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     minLength={isRegister ? 6 : undefined}
-                    required={isRegister}
+                    required={isRegister || !showDemoControls}
                     className="w-full rounded-xl border border-border bg-ivory/60 px-4 py-3.5 pr-20 text-sm text-dark outline-none transition placeholder:text-muted/70 hover:border-gold/50 focus:border-gold focus:ring-4 focus:ring-gold/10"
-                    placeholder={isRegister ? "At least 6 characters" : "Password (optional for demo accounts)"}
+                    placeholder={isRegister ? "At least 6 characters" : showDemoControls ? "Password (optional for demo accounts)" : "Your password"}
                   />
                   <button type="button" className="absolute inset-y-0 right-3 my-auto h-fit rounded px-2 py-1 text-xs font-semibold text-gold-dark hover:bg-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? "Hide" : "Show"}</button>
                 </div>
                 <p className="mt-2 text-xs text-muted">
-                  {isRegister ? "Saved securely to your account database." : "Enter your password for your saved account, or select a demo role below."}
+                  {isRegister ? "Saved securely to your account database." : showDemoControls ? "Enter your password for your saved account, or select a demo role below." : "Enter your account password."}
                 </p>
               </div>
               <button type="submit" disabled={submitting} className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#38272a] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(56,39,42,0.16)] transition hover:-translate-y-0.5 hover:bg-[#513339] hover:shadow-[0_12px_24px_rgba(56,39,42,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 disabled:opacity-60">
@@ -229,7 +221,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                     </span>
                   </div>
                   <GoogleAutofillButton purpose="autofill" onAutofill={(profile) => { setName(profile.name); setEmail(profile.email); setMessage("Google details loaded. Click Continue to enter your account."); }} onError={setMessage} />
-                  <p className="auth-google-footnote mt-3 text-center text-[11px] leading-5">Your name and email fill this form. Your preview customer profile will be saved in this browser.</p>
+                  <p className="auth-google-footnote mt-3 text-center text-[11px] leading-5">Your name and email fill this form. Set a password above to create your account.</p>
                 </div>
               </div>
             ) : (
@@ -243,7 +235,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                     <span>
                       <span className="auth-google-kicker block text-[10px] font-semibold uppercase tracking-[0.19em]">Quick and secure</span>
                       <span className="auth-google-title mt-1 block font-heading text-lg leading-tight">Sign in with Google</span>
-                      <span className="auth-google-description mt-1 block text-xs leading-5">Access your preview workspace and saved preferences.</span>
+                      <span className="auth-google-description mt-1 block text-xs leading-5">Continue securely with your Google account.</span>
                     </span>
                   </div>
                   <GoogleAutofillButton purpose="login" onAutofill={handleGoogleLogin} onError={setMessage} />
@@ -251,7 +243,7 @@ export function AuthForm({ mode }: AuthFormProps) {
               </div>
             )}
 
-            {!isRegister && (
+            {!isRegister && showDemoControls && (
               <div className="mt-7">
                 <div className="mb-4 flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted sm:text-xs"><span className="h-px flex-1 bg-border" />Explore a demo role<span className="h-px flex-1 bg-border" /></div>
                 <div className="grid gap-2.5 sm:grid-cols-2">
@@ -270,7 +262,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             )}
 
             {message && <p role="status" className="mt-5 rounded-xl border border-gold/30 bg-cream px-4 py-3 text-sm leading-6 text-charcoal">{message}</p>}
-            <p className="mt-7 border-t border-border pt-5 text-center text-sm text-muted">{isRegister ? "Already have an account? " : "Need a customer preview? "}<Link href={isRegister ? "/login" : "/register"} className="font-semibold text-gold-dark underline decoration-gold/40 underline-offset-4 transition hover:text-gold hover:decoration-gold">{isRegister ? "Sign in" : "Create an account"}</Link></p>
+            <p className="mt-7 border-t border-border pt-5 text-center text-sm text-muted">{isRegister ? "Already have an account? " : showDemoControls ? "Need a customer preview? " : "New to Goynar Gontobbo? "}<Link href={isRegister ? "/login" : "/register"} className="font-semibold text-gold-dark underline decoration-gold/40 underline-offset-4 transition hover:text-gold hover:decoration-gold">{isRegister ? "Sign in" : "Create an account"}</Link></p>
           </div>
         </div>
       </div>

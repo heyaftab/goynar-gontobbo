@@ -19,7 +19,6 @@ const TOKEN_KEY = "gg_auth_token";
 const USER_KEY = "gg_auth_user";
 
 function getApiBase(): string {
-  // Client-side requests proxy to backend via LARAVEL_API_URL or direct host
   return process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
 }
 
@@ -51,7 +50,7 @@ export function getStoredUser(): AuthUser | null {
 }
 
 export async function apiRegister(data: { name: string; email: string; password: string; phone?: string }): Promise<AuthResponse> {
-  const response = await fetch(`${getApiBase()}/api/v1/auth/register`, {
+  const response = await fetch("/api/auth/register", {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(data),
@@ -68,7 +67,7 @@ export async function apiRegister(data: { name: string; email: string; password:
 }
 
 export async function apiLogin(data: { email: string; password: string }): Promise<AuthResponse> {
-  const response = await fetch(`${getApiBase()}/api/v1/auth/login`, {
+  const response = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(data),

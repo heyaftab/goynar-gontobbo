@@ -2,6 +2,7 @@ import type { Category, Product } from "@/types";
 import { categories as mockCategories } from "@/data/mock-categories";
 import { mockProducts } from "@/data/mock-products";
 import { loadWorkspace } from "@/lib/demo-data";
+import { getLaravelApiUrl } from "@/lib/laravel-api-url";
 
 type Filters = { q?: string; category?: string; newArrivals?: boolean; bestSellers?: boolean };
 type ApiProduct = {
@@ -18,7 +19,7 @@ type ApiProduct = {
   images?: { image_url: string }[];
 };
 
-const apiBase = process.env.LARAVEL_API_URL?.replace(/\/$/, "");
+const apiBase = getLaravelApiUrl();
 const storefrontBase = process.env.NEXT_PUBLIC_STOREFRONT_URL?.replace(/\/$/, "");
 const placeholder = "/jewellery-placeholder.svg";
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyGoogleIdToken } from "@/lib/auth/google";
 import { isAllowedOrigin } from "@/lib/auth/origin";
+import { getLaravelApiUrl } from "@/lib/laravel-api-url";
 
 export const runtime = "nodejs";
 const cookieName = "gg_google_session";
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     let backendUser: unknown = null;
     let backendToken: string | null = null;
-    const apiBase = process.env.LARAVEL_API_URL?.replace(/\/$/, "");
+    const apiBase = getLaravelApiUrl();
     if (apiBase) {
       try {
         const syncRes = await fetch(`${apiBase}/api/v1/auth/google`, {

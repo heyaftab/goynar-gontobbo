@@ -19,7 +19,7 @@ const TOKEN_KEY = "gg_auth_token";
 const USER_KEY = "gg_auth_user";
 
 function getApiBase(): string {
-  return process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+  return "/api/auth";
 }
 
 export function getStoredToken(): string | null {
@@ -83,7 +83,7 @@ export async function apiLogin(data: { email: string; password: string }): Promi
 }
 
 export async function apiGoogleSync(data: { email: string; name: string; google_id?: string; avatar?: string }): Promise<AuthResponse> {
-  const response = await fetch(`${getApiBase()}/api/v1/auth/google`, {
+  const response = await fetch(`${getApiBase()}/google`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(data),
@@ -103,7 +103,7 @@ export async function apiGetProfile(): Promise<AuthUser | null> {
   if (!token) return null;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/v1/auth/me`, {
+    const response = await fetch(`${getApiBase()}/me`, {
       headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
     });
 
@@ -124,7 +124,7 @@ export async function apiUpdateProfile(data: { name?: string; phone?: string; ad
   const token = getStoredToken();
   if (!token) throw new Error("Not authenticated.");
 
-  const response = await fetch(`${getApiBase()}/api/v1/auth/profile`, {
+  const response = await fetch(`${getApiBase()}/profile`, {
     method: "PUT",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}`, Accept: "application/json" },
     body: JSON.stringify(data),
@@ -141,7 +141,7 @@ export async function apiLogout(): Promise<void> {
   const token = getStoredToken();
   if (token) {
     try {
-      await fetch(`${getApiBase()}/api/v1/auth/logout`, {
+      await fetch(`${getApiBase()}/logout`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
       });

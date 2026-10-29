@@ -12,7 +12,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Open <http://localhost:3000>. Without an API URL, catalog pages use the local sample catalog, but registration and login require the Laravel backend. Set `LARAVEL_API_URL=http://127.0.0.1:8000` in `.env.local`, then start Laravel at that address. Authentication requests go through same-origin Next.js routes, which forward them to Laravel and return validation or service errors to the form.
+Open <http://localhost:3000>. Locally, set `LARAVEL_API_URL=http://127.0.0.1:8000` in `.env.local` and start Laravel at that address; without it, catalog pages use the local sample catalog and account services are unavailable. Production defaults to the deployed Goynar Gontobbo Render API. Set `LARAVEL_API_URL` in the hosting environment only if you need to override that default. Authentication requests go through same-origin Next.js routes, which forward them to Laravel and return validation or service errors to the form. `NEXT_PUBLIC_API_URL` is also accepted as a compatibility fallback.
 
 Set `NEXT_PUBLIC_STOREFRONT_URL` to the absolute canonical public storefront origin in production. It supplies canonical links, social metadata, structured data, the XML sitemap, and robots.txt; it also ensures relative catalog image URLs resolve to the storefront when the API and frontend use separate hosts. The value in `.env.example` is an example and must be replaced with the actual production domain before deployment.
 

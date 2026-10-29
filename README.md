@@ -246,7 +246,7 @@ Set the following in `frontend/.env.local`:
 LARAVEL_API_URL=http://127.0.0.1:8000
 ```
 
-The server-rendered catalog will then read from Laravel. If the variable is unset or the API is unreachable, the storefront falls back to its local mock catalog. This variable **stays on the server** and is not exposed to visitors' browsers.
+The server-rendered catalog will then read from Laravel. Local development falls back to mock catalog data when the variable is unset or the API is unreachable. Production defaults to the deployed Goynar Gontobbo Render API; set this variable only to override that default. This variable **stays on the server** and is not exposed to visitors' browsers.
 
 ### 🔑 Google sign-in & profile autofill
 
@@ -335,7 +335,7 @@ The repository is prepared for **Vercel** (frontend) and **Render** (Laravel API
 | :-: | :-- | :-- |
 | **1** | 🟩 **Render** | Connect this Git repository and create a Blueprint from `render.yaml`. It builds `backend/Dockerfile` and runs migrations and the idempotent sample catalog seeder whenever the free web service starts. |
 | **2** | ▲ **Vercel** | Connect the same repository and set the project root directory to `frontend`. |
-| **3** | 🔗 **Link them** | After Render provides the API URL, set `LARAVEL_API_URL` in Vercel's project environment variables to that URL and redeploy. The storefront falls back to mock data if the API is unavailable. |
+| **3** | 🔗 **Link them** | The storefront defaults to the API URL generated for the Render service in `render.yaml`. Set `LARAVEL_API_URL` in Vercel's project environment variables only if the service URL changes or you use a different API host. The variable powers both the catalog and account registration/login. |
 
 > [!CAUTION]
 > This setup is for a **free demo only**.

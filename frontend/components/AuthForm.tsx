@@ -8,6 +8,7 @@ import { demoAccounts, demoUserForEmail, roleLabels } from "@/lib/demo-accounts"
 import { loadWorkspace, saveWorkspace } from "@/lib/demo-data";
 import { GoogleAutofillButton } from "@/components/GoogleAutofillButton";
 import { BrandImage } from "@/components/BrandImageViewer";
+import { apiLogin, apiRegister, setStoredAuth, type AuthUser } from "@/lib/auth/api";
 
 interface AuthFormProps { mode: "login" | "register"; }
 
@@ -18,6 +19,8 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   function demoLogin(accountEmail: string) {
     const account = loadWorkspace().users.find((user) => user.email === accountEmail.trim().toLowerCase()) ?? demoUserForEmail(accountEmail);
@@ -28,18 +31,103 @@ export function AuthForm({ mode }: AuthFormProps) {
     router.push("/account");
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleGoogleLogin(profile: { name: string; email: string; token?: string; user?: unknown }) {
+    const trimmedEmail = profile.email.trim().toLowerCase();
+    const trimmedName = profile.name.trim();
+
+    if (profile.token && profile.user) {
+      setStoredAuth(profile.token, profile.user as AuthUser);
+    }
+
+    const workspace = loadWorkspace();
+    const existing = workspace.users.find((u) => u.email === trimmedEmail) ?? demoUserForEmail(trimmedEmail);
+    const user = existing ?? { name: trimmedName, email: trimmedEmail, role: "customer" as const };
+    if (!existing) {
+      workspace.users = [...workspace.users, user];
+    }
+    workspace.activeUser = user;
+    saveWorkspace(workspace);
+    router.push("/account");
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setSubmitting(true);
+    setMessage("");
+
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedName = name.trim();
+
     if (isRegister) {
-      setMessage("Customer registration is a local preview only. Choose the customer demo account to explore saved preferences and profile settings.");
-      return;
+      if (!trimmedEmail || !trimmedName) {
+        setSubmitting(false);
+        return;
+      }
+
+      // Try database registration first
+      try {
+        const res = await apiRegister({
+          name: trimmedName,
+          email: trimmedEmail,
+          password: password || "password123",
+        });
+
+        const workspace = loadWorkspace();
+        const newUser = { name: res.user.name, email: res.user.email, role: res.user.role };
+        workspace.users = [...workspace.users.filter((u) => u.email !== res.user.email), newUser];
+        workspace.activeUser = newUser;
+        saveWorkspace(workspace);
+        router.push("/account");
+        return;
+      } catch (err) {
+        // Fallback to local workspace preview if backend database is offline
+        const workspace = loadWorkspace();
+        const existing = workspace.users.find((u) => u.email === trimmedEmail);
+        const user = existing ?? { name: trimmedName, email: trimmedEmail, role: "customer" as const };
+        if (!existing) {
+          workspace.users = [...workspace.users, user];
+        }
+        workspace.activeUser = user;
+        saveWorkspace(workspace);
+        router.push("/account");
+        return;
+      } finally {
+        setSubmitting(false);
+      }
     }
-    const account = demoUserForEmail(email);
+
+    // Login mode
+    if (password) {
+      try {
+        const res = await apiLogin({ email: trimmedEmail, password });
+        const workspace = loadWorkspace();
+        const active = { name: res.user.name, email: res.user.email, role: res.user.role };
+        workspace.users = [...workspace.users.filter((u) => u.email !== res.user.email), active];
+        workspace.activeUser = active;
+        saveWorkspace(workspace);
+        router.push("/account");
+        return;
+      } catch (err) {
+        // If password login failed against backend and not a demo account, show error
+        const isDemo = demoUserForEmail(trimmedEmail);
+        if (!isDemo) {
+          setMessage(err instanceof Error ? err.message : "Invalid email or password.");
+          setSubmitting(false);
+          return;
+        }
+      }
+    }
+
+    // Demo account passwordless fallback
+    const account = demoUserForEmail(trimmedEmail) ?? loadWorkspace().users.find((u) => u.email === trimmedEmail);
     if (!account) {
-      setMessage("This preview supports the listed demo accounts. Choose a demo account below to continue.");
+      setMessage("Account not found. Enter your password or select a demo role below.");
+      setSubmitting(false);
       return;
     }
+
     demoLogin(account.email);
+    setSubmitting(false);
   }
 
   return (
@@ -100,23 +188,33 @@ export function AuthForm({ mode }: AuthFormProps) {
                 <label htmlFor="email" className="mb-2 block text-xs font-semibold text-charcoal">Email address</label>
                 <input id="email" name="email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required className="w-full rounded-xl border border-border bg-ivory/60 px-4 py-3.5 text-sm text-dark outline-none transition placeholder:text-muted/70 hover:border-gold/50 focus:border-gold focus:ring-4 focus:ring-gold/10" placeholder="customer@goynar.demo" />
               </div>
-              {isRegister && (
-                <div>
-                  <label htmlFor="password" className="mb-2 block text-xs font-semibold text-charcoal">Password</label>
-                  <div className="relative">
-                    <input id="password" name="password" type={showPassword ? "text" : "password"} minLength={8} onChange={() => undefined} className="w-full rounded-xl border border-border bg-ivory/60 px-4 py-3.5 pr-20 text-sm text-dark outline-none transition placeholder:text-muted/70 hover:border-gold/50 focus:border-gold focus:ring-4 focus:ring-gold/10" placeholder="Not saved in this preview" />
-                    <button type="button" className="absolute inset-y-0 right-3 my-auto h-fit rounded px-2 py-1 text-xs font-semibold text-gold-dark hover:bg-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? "Hide" : "Show"}</button>
-                  </div>
-                  <p className="mt-2 text-xs text-muted">Password entry is for preview only and is not saved.</p>
+              <div>
+                <label htmlFor="password" className="mb-2 block text-xs font-semibold text-charcoal">Password</label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    minLength={isRegister ? 6 : undefined}
+                    required={isRegister}
+                    className="w-full rounded-xl border border-border bg-ivory/60 px-4 py-3.5 pr-20 text-sm text-dark outline-none transition placeholder:text-muted/70 hover:border-gold/50 focus:border-gold focus:ring-4 focus:ring-gold/10"
+                    placeholder={isRegister ? "At least 6 characters" : "Password (optional for demo accounts)"}
+                  />
+                  <button type="button" className="absolute inset-y-0 right-3 my-auto h-fit rounded px-2 py-1 text-xs font-semibold text-gold-dark hover:bg-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"}>{showPassword ? "Hide" : "Show"}</button>
                 </div>
-              )}
-              <button type="submit" className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#38272a] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(56,39,42,0.16)] transition hover:-translate-y-0.5 hover:bg-[#513339] hover:shadow-[0_12px_24px_rgba(56,39,42,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2">
-                {isRegister ? "Continue" : "Continue with email"}
+                <p className="mt-2 text-xs text-muted">
+                  {isRegister ? "Saved securely to your account database." : "Enter your password for your saved account, or select a demo role below."}
+                </p>
+              </div>
+              <button type="submit" disabled={submitting} className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[#38272a] px-5 py-3.5 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(56,39,42,0.16)] transition hover:-translate-y-0.5 hover:bg-[#513339] hover:shadow-[0_12px_24px_rgba(56,39,42,0.2)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 disabled:opacity-60">
+                {submitting ? (isRegister ? "Creating account…" : "Signing in…") : (isRegister ? "Create account" : "Continue with email")}
                 <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span>
               </button>
             </form>
 
-            {isRegister && (
+            {isRegister ? (
               <div className="auth-google-wrap mt-6">
                 <div className="auth-google-divider" aria-hidden="true"><span>OR GET STARTED WITH</span></div>
                 <div className="auth-google-panel mt-4 rounded-2xl border p-4 sm:p-5">
@@ -130,8 +228,25 @@ export function AuthForm({ mode }: AuthFormProps) {
                       <span className="auth-google-description mt-1 block text-xs leading-5">Fill in your profile details in one step.</span>
                     </span>
                   </div>
-                  <GoogleAutofillButton purpose="autofill" onAutofill={(profile) => { setName(profile.name); setEmail(profile.email); setMessage("Google filled the form. This preview will not save it as a customer account."); }} onError={setMessage} />
-                  <p className="auth-google-footnote mt-3 text-center text-[11px] leading-5">Your name and email fill this preview form. No customer account is saved.</p>
+                  <GoogleAutofillButton purpose="autofill" onAutofill={(profile) => { setName(profile.name); setEmail(profile.email); setMessage("Google details loaded. Click Continue to enter your account."); }} onError={setMessage} />
+                  <p className="auth-google-footnote mt-3 text-center text-[11px] leading-5">Your name and email fill this form. Your preview customer profile will be saved in this browser.</p>
+                </div>
+              </div>
+            ) : (
+              <div className="auth-google-wrap mt-6">
+                <div className="auth-google-divider" aria-hidden="true"><span>OR SIGN IN WITH</span></div>
+                <div className="auth-google-panel mt-4 rounded-2xl border p-4 sm:p-5">
+                  <div className="auth-google-heading mb-4 flex items-start gap-3">
+                    <span className="auth-google-mark flex h-10 w-10 shrink-0 items-center justify-center rounded-full" aria-hidden="true">
+                      <svg viewBox="0 0 48 48" aria-hidden="true" className="auth-google-g h-5 w-5"><path fill="#4285F4" d="M43.6 24.5c0-1.4-.1-2.8-.4-4.1H24v7.8h11a9.4 9.4 0 0 1-4.1 6.2v5.1h6.6c3.9-3.6 6.1-8.8 6.1-15Z"/><path fill="#34A853" d="M24 44c5.5 0 10.1-1.8 13.5-4.9l-6.6-5.1c-1.8 1.2-4.1 1.9-6.9 1.9-5.3 0-9.8-3.6-11.4-8.4H5.8v5.2C9.2 39.4 16 44 24 44Z"/><path fill="#FBBC05" d="M12.6 27.5a12 12 0 0 1 0-7v-5.2H5.8a20 20 0 0 0 0 17.4l6.8-5.2Z"/><path fill="#EA4335" d="M24 12.1c3 0 5.7 1 7.8 3.1l5.8-5.8C34.1 6.1 29.5 4 24 4 16 4 9.2 8.6 5.8 15.3l6.8 5.2c1.6-4.8 6.1-8.4 11.4-8.4Z"/></svg>
+                    </span>
+                    <span>
+                      <span className="auth-google-kicker block text-[10px] font-semibold uppercase tracking-[0.19em]">Quick and secure</span>
+                      <span className="auth-google-title mt-1 block font-heading text-lg leading-tight">Sign in with Google</span>
+                      <span className="auth-google-description mt-1 block text-xs leading-5">Access your preview workspace and saved preferences.</span>
+                    </span>
+                  </div>
+                  <GoogleAutofillButton purpose="login" onAutofill={handleGoogleLogin} onError={setMessage} />
                 </div>
               </div>
             )}

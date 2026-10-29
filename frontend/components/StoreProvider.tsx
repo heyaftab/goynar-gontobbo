@@ -14,6 +14,7 @@ interface StoreValue extends StoreSnapshot {
   setCartQuantity: (productId: string, quantity: number) => void;
   removeFromCart: (productId: string) => void;
   toggleWishlist: (productId: string) => void;
+  clearWishlist: () => void;
 }
 
 const serverSnapshot: StoreSnapshot = { cart: [], wishlist: [] };
@@ -94,11 +95,16 @@ function toggleWishlist(productId: string) {
   });
 }
 
+function clearWishlist() {
+  const current = getSnapshot();
+  update({ ...current, wishlist: [] });
+}
+
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   return children;
 }
 
 export function useStore(): StoreValue {
   const current = useSyncExternalStore(subscribe, getSnapshot, () => serverSnapshot);
-  return { ...current, addToCart, setCartQuantity, removeFromCart, toggleWishlist };
+  return { ...current, addToCart, setCartQuantity, removeFromCart, toggleWishlist, clearWishlist };
 }

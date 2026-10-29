@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyGoogleIdToken } from "@/lib/auth/google";
+import { isAllowedOrigin } from "@/lib/auth/origin";
 
 export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
-  if (request.headers.get("origin") !== request.nextUrl.origin) {
+  if (!isAllowedOrigin(request)) {
     return NextResponse.json({ message: "Request origin is invalid." }, { status: 403 });
   }
 
@@ -26,7 +27,8 @@ export async function POST(request: NextRequest) {
     const claims = await verifyGoogleIdToken(body.credential, clientId);
     if (!claims) return NextResponse.json({ message: "Google could not verify this account. Please try again." }, { status: 401 });
     return NextResponse.json({ name: claims.name, email: claims.email });
-  } catch {
+  } catch (error) {
+    console.error("Error in /api/auth/google-profile POST:", error);
     return NextResponse.json({ message: "Google autofill is temporarily unavailable. Please enter your details manually." }, { status: 502 });
   }
 }

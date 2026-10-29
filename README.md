@@ -2,8 +2,6 @@
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:8B6914,50:D4AF37,100:F5E6A8&height=220&section=header&text=Goynar%20Gontobbo&fontSize=56&fontColor=ffffff&fontAlignY=38&desc=Handcrafted%20Bangladeshi%20jewellery%2C%20beautifully%20presented&descSize=18&descAlignY=60&animation=fadeIn" alt="Goynar Gontobbo banner" width="100%" />
 
-# 💎 Goynar Gontobbo
-
 **A full-stack jewellery storefront for handcrafted Bangladeshi jewellery.**
 *Responsive catalog · Laravel API · graceful mock-data fallback*
 

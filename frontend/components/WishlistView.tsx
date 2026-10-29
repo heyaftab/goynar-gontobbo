@@ -7,7 +7,7 @@ import { useStore } from "@/components/StoreProvider";
 import type { Product } from "@/types";
 
 export function WishlistView({ products: catalog }: { products: Product[] }) {
-  const { wishlist, toggleWishlist } = useStore();
+  const { wishlist, clearWishlist } = useStore();
   const products = useMemo(
     () => catalog.filter((product) => wishlist.includes(product.id)),
     [catalog, wishlist],
@@ -22,7 +22,7 @@ export function WishlistView({ products: catalog }: { products: Product[] }) {
             <h1 className="font-heading text-3xl text-dark sm:text-4xl">Your Wishlist</h1>
             <p className="mt-2 text-sm text-muted">{products.length} {products.length === 1 ? "piece" : "pieces"} saved in this browser</p>
           </div>
-          {products.length > 0 && <button type="button" onClick={() => products.forEach((product) => toggleWishlist(product.id))} className="text-sm text-muted underline underline-offset-4 hover:text-charcoal">Clear wishlist</button>}
+          {products.length > 0 && <button type="button" onClick={clearWishlist} className="text-sm text-muted underline underline-offset-4 hover:text-charcoal">Clear wishlist</button>}
         </div>
       </header>
 

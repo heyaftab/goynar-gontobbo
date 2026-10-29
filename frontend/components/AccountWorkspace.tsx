@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Product } from "@/types";
 import { categories } from "@/data/mock-categories";
 import { roleLabels, type DemoRole } from "@/lib/demo-accounts";
 import { defaultProfile, defaultUserPreferences, hasRole, loadWorkspace, saveWorkspace, type DemoNotification, type DemoWorkspace, type PrivateNote } from "@/lib/demo-data";
+import { apiGetProfile, apiLogout, apiUpdateProfile, getStoredToken } from "@/lib/auth/api";
 
 const panel = "rounded-2xl border border-border bg-surface p-5 shadow-sm sm:p-6";
 const input = "w-full rounded-lg border border-border bg-white px-3 py-2.5 text-sm text-charcoal outline-none focus:border-gold focus:ring-2 focus:ring-gold/15";
@@ -32,6 +33,30 @@ export function AccountWorkspace() {
   const notifications = user ? workspace.notifications[user.email] ?? [] : [];
   const canManageCatalog = hasRole(role, "moderator");
   const canManageTeam = hasRole(role, "admin");
+  const [isDbSynced, setIsDbSynced] = useState(false);
+
+  useEffect(() => {
+    async function syncDbUser() {
+      if (!getStoredToken() || !user) return;
+      try {
+        const dbUser = await apiGetProfile();
+        if (dbUser) {
+          setIsDbSynced(true);
+          const next = loadWorkspace();
+          next.profiles[user.email] = {
+            name: dbUser.name || user.name,
+            phone: dbUser.phone || "",
+            address: dbUser.address || "",
+          };
+          saveWorkspace(next);
+          setWorkspace(next);
+        }
+      } catch (err) {
+        console.warn("Could not fetch remote profile:", err);
+      }
+    }
+    syncDbUser();
+  }, [user]);
 
   function commit(next: DemoWorkspace, message?: string) {
     saveWorkspace(next);
@@ -39,11 +64,30 @@ export function AccountWorkspace() {
     if (message) setStatus(message);
   }
 
-  function updateProfile(event: FormEvent<HTMLFormElement>) {
+  async function updateProfile(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!workspace || !user) return;
     const formData = new FormData(event.currentTarget);
-    commit({ ...workspace, profiles: { ...workspace.profiles, [user.email]: { name: String(formData.get("name") ?? ""), phone: String(formData.get("phone") ?? ""), address: String(formData.get("address") ?? "") } } }, "Profile saved in this browser.");
+    const newName = String(formData.get("name") ?? "");
+    const newPhone = String(formData.get("phone") ?? "");
+    const newAddress = String(formData.get("address") ?? "");
+
+    if (getStoredToken()) {
+      try {
+        await apiUpdateProfile({ name: newName, phone: newPhone, address: newAddress });
+        setStatus("Profile saved in database and synced.");
+      } catch (err) {
+        console.warn("Failed to sync profile to database:", err);
+      }
+    }
+
+    commit({
+      ...workspace,
+      profiles: {
+        ...workspace.profiles,
+        [user.email]: { name: newName, phone: newPhone, address: newAddress },
+      },
+    }, getStoredToken() ? "Profile saved in the database." : "Profile saved in this browser.");
   }
 
   function updatePreferences(event: FormEvent<HTMLFormElement>) {
@@ -133,7 +177,8 @@ export function AccountWorkspace() {
     commit({ ...workspace, notifications: { ...workspace.notifications, [user.email]: nextNotifications } });
   }
 
-  function signOut() {
+  async function signOut() {
+    await apiLogout();
     commit({ ...workspace, activeUser: null });
     router.push("/login");
   }
@@ -146,7 +191,15 @@ export function AccountWorkspace() {
 
   return <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
     <div className="mb-7 flex flex-col justify-between gap-5 sm:flex-row sm:items-end"><div><p className="mb-2 text-xs font-semibold uppercase tracking-[0.24em] text-gold-dark">{roleLabels[role]} workspace · local demo</p><h1 className="font-heading text-3xl text-dark sm:text-4xl">Welcome, {profile?.name || user.name}</h1><p className="mt-2 break-all text-sm text-muted">{user.email}</p></div><div className="flex flex-wrap gap-2"><button onClick={() => setTab("overview")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "overview" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Overview</button><button onClick={() => setTab("profile")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "profile" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Profile</button><button onClick={() => setTab("settings")} className={`rounded-lg px-4 py-2 text-sm font-medium ${tab === "settings" ? "bg-charcoal text-white" : "border border-border text-charcoal"}`}>Settings</button><button onClick={signOut} className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-charcoal hover:border-gold">Sign out</button></div></div>
-    <div className="mb-6 rounded-xl border border-gold/30 bg-cream/60 px-4 py-3 text-xs leading-5 text-charcoal">Demo workspace: saved data and role changes live only in this browser. There is no backend authorization, shared account database, or real order history.</div>
+    {isDbSynced ? (
+      <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-50/70 px-4 py-3 text-xs leading-5 text-emerald-900">
+        ✓ <strong>Connected Account:</strong> Signed in with your persistent database account ({user.email}). Profile changes sync directly to the database.
+      </div>
+    ) : (
+      <div className="mb-6 rounded-xl border border-gold/30 bg-cream/60 px-4 py-3 text-xs leading-5 text-charcoal">
+        Demo workspace: saved data and role changes live in this browser. Register or sign in with Google to sync with your persistent database account.
+      </div>
+    )}
     {status && <p role="status" className="mb-5 rounded-lg border border-border bg-white px-4 py-3 text-sm text-charcoal">{status}</p>}
 
     {tab === "profile" && <div className={panel}><h2 className="font-heading text-2xl text-dark">Profile</h2><p className="mb-6 mt-1 text-sm text-muted">Your details are saved locally for the selected demo account.</p><form className="grid gap-4 sm:grid-cols-2" onSubmit={updateProfile}><label className="text-sm text-charcoal">Display name<input className={`${input} mt-2`} name="name" defaultValue={profile?.name} required /></label><label className="text-sm text-charcoal">Email<input className={`${input} mt-2 bg-cream`} value={user.email} readOnly /></label><label className="text-sm text-charcoal">Phone<input className={`${input} mt-2`} name="phone" defaultValue={profile?.phone} placeholder="Optional" /></label><label className="text-sm text-charcoal sm:col-span-2">Delivery address for your preview profile<textarea className={`${input} mt-2 min-h-24`} name="address" defaultValue={profile?.address} placeholder="Optional; no order will be placed" /></label><div className="sm:col-span-2"><button className="rounded-lg bg-charcoal px-5 py-2.5 text-sm font-semibold text-white hover:bg-gold-dark">Save profile</button></div></form></div>}

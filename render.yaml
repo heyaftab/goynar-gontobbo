@@ -14,6 +14,20 @@ services:
         value: https://goynar-gontobbo-api.onrender.com
       - key: FRONTEND_URL
         value: https://goynargontobbo.com
+      - key: MAIL_MAILER
+        value: smtp
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USERNAME
+        value: aftabuddinahmad26@gmail.com
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_FROM_ADDRESS
+        value: aftabuddinahmad26@gmail.com
+      - key: MAIL_FROM_NAME
+        value: Goynar Gontobbo
       - key: APP_DEBUG
         value: "false"
       - key: APP_KEY

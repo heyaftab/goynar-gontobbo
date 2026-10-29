@@ -45,7 +45,7 @@ curl "http://127.0.0.1:8000/api/v1/products?category=rings&per_page=12"
 
 Password reset requests use Laravel's password broker and send a single-use link to the account email. The link opens the storefront's `/reset-password` page; tokens expire after 60 minutes and reset requests are rate limited. The forgot-password response does not reveal whether an email is registered.
 
-For local development, the default `MAIL_MAILER=log` writes reset emails to the Laravel log instead of delivering them. For production, configure a trusted SMTP provider in the Render service environment: `MAIL_MAILER=smtp`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_SCHEME`, `MAIL_USERNAME`, `MAIL_PASSWORD`, `MAIL_FROM_ADDRESS`, and `MAIL_FROM_NAME`. Keep credentials in Render environment variables, never in the repository. `FRONTEND_URL` must point to the deployed storefront so reset links return to the right site.
+For local development, the default `MAIL_MAILER=log` writes reset emails to the Laravel log instead of delivering them. Production is configured for Gmail SMTP at `smtp.gmail.com:587` (TLS/STARTTLS). Set `MAIL_USERNAME` and `MAIL_FROM_ADDRESS` to the sender Gmail address and enter a Google App Password as `MAIL_PASSWORD` in the Render service environment. App passwords require 2-Step Verification. Keep the password in Render environment variables, never in the repository. Port 587 and the sender name are preconfigured. `FRONTEND_URL` must point to the deployed storefront so reset links return to the right site. Password recovery remains unavailable until valid SMTP settings are present.
 
 ## Commands
 

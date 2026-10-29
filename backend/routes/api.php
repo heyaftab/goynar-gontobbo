@@ -105,10 +105,24 @@ Route::prefix('v1')->group(function (): void {
                 'email' => ['required', 'email', 'max:255'],
             ]);
 
-            if (app()->isProduction() && in_array(config('mail.default'), ['log', 'array'], true)) {
-                return response()->json([
-                    'message' => 'Password recovery is temporarily unavailable. Please try again later.',
-                ], 503);
+            if (app()->isProduction()) {
+                $mailHost = (string) config('mail.mailers.smtp.host');
+                $mailUsername = (string) config('mail.mailers.smtp.username');
+                $mailPassword = (string) config('mail.mailers.smtp.password');
+                $fromAddress = (string) config('mail.from.address');
+
+                if (
+                    in_array(config('mail.default'), ['log', 'array'], true)
+                    || in_array(strtolower($mailHost), ['localhost', '127.0.0.1'], true)
+                    || $mailUsername === ''
+                    || $mailPassword === ''
+                    || ! filter_var($fromAddress, FILTER_VALIDATE_EMAIL)
+                    || str_ends_with(strtolower($fromAddress), '@example.com')
+                ) {
+                    return response()->json([
+                        'message' => 'Password recovery is temporarily unavailable. Please try again later.',
+                    ], 503);
+                }
             }
 
             try {

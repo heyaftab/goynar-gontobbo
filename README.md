@@ -1,6 +1,13 @@
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:8B6914,50:D4AF37,100:F5E6A8&height=220&section=header&text=Goynar%20Gontobbo&fontSize=56&fontColor=ffffff&fontAlignY=38&desc=Handcrafted%20Bangladeshi%20jewellery%2C%20beautifully%20presented&descSize=18&descAlignY=60&animation=fadeIn" alt="Goynar Gontobbo banner" width="100%" />
+
 # 💎 Goynar Gontobbo
 
-Handcrafted Bangladeshi jewellery, beautifully presented.
+**A full-stack jewellery storefront for handcrafted Bangladeshi jewellery.**
+*Responsive catalog · Laravel API · graceful mock-data fallback*
+
+<br />
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -13,13 +20,29 @@ Handcrafted Bangladeshi jewellery, beautifully presented.
 ![Vercel](https://img.shields.io/badge/Vercel-frontend-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![Render](https://img.shields.io/badge/Render-API-46E3B7?style=for-the-badge&logo=render&logoColor=black)
 
-[✨ Features](#-features) •
-[🧰 Tech Stack](#-tech-stack) •
-[🗂 Structure](#-project-structure) •
-[🚀 Quick Start](#-quick-start) •
-[🔌 API](#-api-reference) •
-[☁️ Deploy](#️-deployment) •
+![Status](https://img.shields.io/badge/status-catalog%20live%20%7C%20checkout%20planned-D4AF37?style=flat-square)
+![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-8B6914?style=flat-square)
+![Made in Bangladesh](https://img.shields.io/badge/made%20in-Bangladesh-006A4E?style=flat-square)
+
+<br />
+
+[✨ Features](#-features) &nbsp;•&nbsp;
+[🧰 Tech Stack](#-tech-stack) &nbsp;•&nbsp;
+[🗂 Structure](#-project-structure) &nbsp;•&nbsp;
+[🚀 Quick Start](#-quick-start) &nbsp;•&nbsp;
+[🔌 API](#-api-reference) &nbsp;•&nbsp;
+[☁️ Deploy](#️-deployment) &nbsp;•&nbsp;
 [🗺 Roadmap](#-roadmap)
+
+</div>
+
+<!--
+📸 Add a homepage screenshot, then uncomment the block below:
+
+<div align="center">
+  <img src="docs/screenshots/home.png" alt="Goynar Gontobbo homepage" width="900" />
+</div>
+-->
 
 ---
 
@@ -29,6 +52,8 @@ Handcrafted Bangladeshi jewellery, beautifully presented.
 
 > [!NOTE]
 > **Project status:** The storefront reads the Laravel catalog API when configured and falls back to local mock catalog data when the API is unavailable. Checkout, persisted customer accounts, and server-side administration are **not implemented yet**. Local role previews are for demonstration only.
+
+### 🧭 How it fits together
 
 ```mermaid
 flowchart LR
@@ -42,16 +67,48 @@ flowchart LR
 
 ## ✨ Features
 
-| | Feature |
-| :-: | --- |
-| 📱 | Responsive, polished storefront with desktop and mobile navigation |
-| 🏠 | Homepage sections: hero, categories, new arrivals, best sellers, brand story, and customer assurances |
-| 💍 | Category presentation for **earrings, rings, bangles, necklaces, jhumka, cuffs, tana,** and **sets** |
-| ৳ | Bangladeshi Taka (`৳`) pricing in the current catalog mock data |
-| 🗄 | Product-oriented schema: categories, materials, purities, products, product images, and variants |
-| 🔐 | Laravel-ready support for users, database-backed sessions, cache, and queues |
-| 🔁 | Graceful fallback to mock data when the API is unavailable |
-| 🔎 | Search-friendly page metadata, canonical URLs, robots rules, and an XML sitemap |
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h4>📱 Responsive storefront</h4>
+      Polished design with desktop and mobile navigation.
+    </td>
+    <td width="50%" valign="top">
+      <h4>🏠 Rich homepage</h4>
+      Hero, categories, new arrivals, best sellers, brand story, and customer assurances.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <h4>💍 Jewellery categories</h4>
+      <b>Earrings, rings, bangles, necklaces, jhumka, cuffs, tana,</b> and <b>sets</b>.
+    </td>
+    <td valign="top">
+      <h4>৳ Taka pricing</h4>
+      Bangladeshi Taka (<code>৳</code>) pricing in the current catalog mock data.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <h4>🗄 Product-oriented schema</h4>
+      Categories, materials, purities, products, product images, and variants.
+    </td>
+    <td valign="top">
+      <h4>🔐 Laravel-ready foundations</h4>
+      Support for users, database-backed sessions, cache, and queues.
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <h4>🔁 Graceful fallback</h4>
+      Automatically switches to mock data when the API is unavailable.
+    </td>
+    <td valign="top">
+      <h4>🔎 SEO-friendly</h4>
+      Page metadata, canonical URLs, robots rules, and an XML sitemap.
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -81,7 +138,7 @@ goynar-gontobbo/
 │   ├── app/                      # Application code
 │   ├── config/                   # Laravel configuration
 │   ├── database/migrations/      # Catalog and framework migrations
-│   ├── database/seeders/        # Idempotent sample catalog data
+│   ├── database/seeders/         # Idempotent sample catalog data
 │   ├── routes/                   # Server routes
 │   └── tests/                    # PHPUnit tests
 └── 📖 README.md                  # This project guide
@@ -93,10 +150,12 @@ goynar-gontobbo/
 
 ### 📋 Prerequisites
 
-- **Node.js** 20.9+ and npm
-- **PHP** 8.2+
-- **Composer** 2
-- **SQLite** (recommended for local dev) or a supported database server
+| Tool | Version |
+| :-- | :-- |
+| 🟢 **Node.js** + npm | 20.9+ |
+| 🐘 **PHP** | 8.2+ |
+| 🎼 **Composer** | 2 |
+| 🪶 **SQLite** | Recommended for local dev (or any supported database server) |
 
 ### 1️⃣ Backend
 
@@ -162,6 +221,11 @@ Copy `backend/.env.example` to `backend/.env`.
 > [!WARNING]
 > **Never commit** the resulting `.env` file or any credentials.
 
+<details>
+<summary><b>📑 Backend environment variables</b> (click to expand)</summary>
+
+<br />
+
 | Variable | Purpose | Local example |
 | :-- | :-- | :-- |
 | `APP_NAME` | Laravel application name | `Goynar Gontobbo` |
@@ -173,6 +237,8 @@ Copy `backend/.env.example` to `backend/.env`.
 | `DB_HOST`, `DB_PORT` | Database host and port | `127.0.0.1`, `3306` for MySQL |
 | `DB_USERNAME`, `DB_PASSWORD` | Database credentials | Your local database credentials |
 | `SESSION_DRIVER`, `CACHE_STORE`, `QUEUE_CONNECTION` | Laravel service drivers | `database`, `database`, `database` |
+
+</details>
 
 ### 🔗 Connecting the storefront to Laravel
 
@@ -191,7 +257,7 @@ Google profile autofill and sign-in require a **Google Identity Services OAuth w
 1. Create a Google Identity Services OAuth **Web application** client ID and add the exact storefront origin to its authorized JavaScript origins (`http://localhost:3000` locally and your Vercel domain in production).
 2. Set that same client ID as `NEXT_PUBLIC_GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_ID` in the frontend environment (see `frontend/.env.example`). The server verifies the token signature, issuer, audience, expiry, and verified email. Login requests must be same-origin and create a short-lived HTTP-only cookie.
 
-How it works:
+**How it works:**
 
 - The browser displays Google's official account button; the server verifies its signed ID token with Google's public signing keys.
 - **Registration** uses the verified name and email to fill the form.
@@ -248,9 +314,9 @@ The Laravel backend exposes a **public, read-only** catalog API under `/api/v1`:
 
 | Method | Endpoint | Purpose |
 | :-: | :-- | :-- |
-| `GET` | `/api/v1/categories` | List active categories with active product counts |
-| `GET` | `/api/v1/products` | Paginated active products; accepts `q`, `category`, and `per_page` filters |
-| `GET` | `/api/v1/products/{slug}` | Fetch one active product by slug |
+| ![GET](https://img.shields.io/badge/GET-2EA44F?style=flat-square) | `/api/v1/categories` | List active categories with active product counts |
+| ![GET](https://img.shields.io/badge/GET-2EA44F?style=flat-square) | `/api/v1/products` | Paginated active products; accepts `q`, `category`, and `per_page` filters |
+| ![GET](https://img.shields.io/badge/GET-2EA44F?style=flat-square) | `/api/v1/products/{slug}` | Fetch one active product by slug |
 
 Product responses include **category, material, purity, images,** and **active variants**.
 
@@ -267,9 +333,11 @@ curl "http://127.0.0.1:8000/api/v1/products?category=rings&per_page=12"
 
 The repository is prepared for **Vercel** (frontend) and **Render** (Laravel API + PostgreSQL).
 
-1. **Render** — Connect this Git repository and create a Blueprint from `render.yaml`. It builds `backend/Dockerfile` and runs migrations and the idempotent sample catalog seeder whenever the free web service starts.
-2. **Vercel** — Connect the same repository and set the project root directory to `frontend`.
-3. **Link them** — After Render provides the API URL, set `LARAVEL_API_URL` in Vercel's project environment variables to that URL and redeploy. The storefront falls back to mock data if the API is unavailable.
+| Step | Where | What to do |
+| :-: | :-- | :-- |
+| **1** | 🟩 **Render** | Connect this Git repository and create a Blueprint from `render.yaml`. It builds `backend/Dockerfile` and runs migrations and the idempotent sample catalog seeder whenever the free web service starts. |
+| **2** | ▲ **Vercel** | Connect the same repository and set the project root directory to `frontend`. |
+| **3** | 🔗 **Link them** | After Render provides the API URL, set `LARAVEL_API_URL` in Vercel's project environment variables to that URL and redeploy. The storefront falls back to mock data if the API is unavailable. |
 
 > [!CAUTION]
 > This setup is for a **free demo only**.
@@ -293,11 +361,7 @@ The repository is prepared for **Vercel** (frontend) and **Render** (Laravel API
 
 ---
 
-Crafted with ♥ in Bangladesh
-
-💍 Goynar Gontobbo 💍
-
-## License
+## 📄 License
 
 Copyright © 2026 Aftab Uddin Ahmad. All Rights Reserved.
 
@@ -306,3 +370,15 @@ This project is proprietary software. The source code is publicly available for 
 Commercial use, redistribution, or substantial reuse requires prior written permission from the copyright holder.
 
 See the [LICENSE](LICENSE) file for the complete terms.
+
+<div align="center">
+
+<br />
+
+💍 **Goynar Gontobbo** 💍
+
+*Crafted with ♥ in Bangladesh*
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:F5E6A8,50:D4AF37,100:8B6914&height=120&section=footer" alt="" width="100%" />
+
+</div>
